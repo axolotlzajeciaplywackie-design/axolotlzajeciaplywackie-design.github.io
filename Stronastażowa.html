@@ -1,0 +1,1285 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>CMS – Virtual internships (mock)</title>
+
+<style>
+:root{
+  --cms-teal:#3a6f78;        /* sticky bar */
+  --cms-orange:#f37b20;
+  --cms-deep:#0d535f;
+  --text:#101315;
+  --font: system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
+
+  --container:1440px;
+  --content:1280px;
+
+  --brand-orange: #e66a1a;
+  --text-white: #ffffff;
+  --divider-color: rgba(255, 255, 255, 0.15);
+}
+
+*{box-sizing:border-box}
+html,body{margin:0}
+body{font-family:var(--font); color:var(--text); background:#fff}
+a{color:inherit; text-decoration:none}
+button{font-family:inherit}
+
+/* ================= HERO ================= */
+.stage{
+  position:relative;
+  height:460px;
+  overflow:hidden;
+  background:#000;
+}
+.stage img.bg{
+  position:absolute; inset:0;
+  width:100%; height:100%;
+  object-fit:cover;
+  transform:scale(1.04);
+}
+.stage::after{
+  content:"";
+  position:absolute; inset:0;
+  background:linear-gradient(180deg,
+    rgba(0,0,0,.38) 0%,
+    rgba(0,0,0,.50) 55%,
+    rgba(0,0,0,.66) 100%
+  );
+}
+
+/* ================= HEADER ON HERO (NOT STICKY) ================= */
+.hero-header{
+  position:absolute;
+  top:0; left:0; right:0;
+  z-index:10;
+  color:#fff;
+}
+.hero-header .inner{
+  max-width:var(--container);
+  margin:0 auto;
+  padding:14px 32px 10px;
+}
+.header-row{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:18px;
+}
+
+.header-left{
+  display:flex;
+  align-items:center;
+  gap:18px;
+  min-width:auto;
+}
+
+.header-center{
+  flex:1;
+  display:flex;
+  justify-content:flex-start;
+  align-items:center;
+  padding-left:0;
+  margin-left:14px;
+}
+
+.header-right{
+  min-width:260px;
+  display:flex;
+  align-items:center;
+  justify-content:flex-end;
+  gap:18px;
+  font-size:14px;
+}
+
+.burger{
+  width:40px;height:40px;
+  display:grid; place-items:center;
+  background:transparent;
+  border:none;
+  padding:0;
+  cursor:pointer;
+}
+.icon{
+  width:18px;height:18px;
+  fill:none;
+  stroke:#fff;
+  stroke-width:2;
+  stroke-linecap:round;
+  stroke-linejoin:round;
+}
+.icon-solid{
+  width:18px;height:18px;
+  fill:#fff;
+}
+
+.logo{display:flex; align-items:center;}
+.logo img{display:block; height:44px; width:auto;}
+
+.nav-pill{
+  display:flex;
+  align-items:center;
+  gap:26px;
+  padding:14px 26px;
+  border-radius:999px;
+  background:rgba(255,255,255,.24);
+  backdrop-filter:blur(10px);
+  -webkit-backdrop-filter:blur(10px);
+}
+.nav-pill a{
+  color:#fff;
+  font-size:15px;
+  font-weight:520;
+  white-space:nowrap;
+}
+
+.lang{
+  display:flex;
+  align-items:center;
+  gap:8px;
+  color:#fff;
+  white-space:nowrap;
+}
+
+.global-btn{
+  display:inline-flex;
+  align-items:center;
+  gap:8px;
+  margin:28px 0 0 58px;
+  padding:8px 16px;
+  border-radius:999px;
+  background:#fff;
+  color:var(--cms-orange);
+  font-size:12px;
+  font-weight:650;
+  letter-spacing:.02em;
+}
+.global-btn .arrow{
+  width:10px;height:10px;
+  stroke:var(--cms-orange);
+  stroke-width:2.2;
+  fill:none;
+  stroke-linecap:round;
+  stroke-linejoin:round;
+}
+
+/* ================= HERO TITLE ================= */
+.stage-inner{
+  position:relative;
+  z-index:2;
+  height:100%;
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+  align-items:center;
+  color:#fff;
+  text-align:center;
+  padding-top:36px;
+}
+.stage h1{
+  margin:0;
+  font-weight:200;
+  font-size:64px;
+  letter-spacing:.2px;
+  color:#fff;
+  text-shadow: 0 2px 14px rgba(0,0,0,.55);
+}
+.stage p{
+  margin:14px 0 0;
+  font-size:16px;
+  color:#fff;
+  text-shadow: 0 2px 10px rgba(0,0,0,.45);
+}
+
+/* ================= STICKY HEADER (APPEARS AFTER HERO) ================= */
+.sticky-header{
+  position:fixed;
+  top:0; left:0; right:0;
+  z-index:1000;
+  background:var(--cms-teal);
+  transform:translateY(-110%);
+  transition:transform .18s ease;
+}
+.sticky-header.is-on{ transform:translateY(0); }
+.sticky-header .inner{
+  max-width:var(--container);
+  margin:0 auto;
+  padding:12px 32px;
+  color:#fff;
+}
+.sticky-header .header-center{ display:none; }
+.sticky-header .global-btn{ display:none; }
+
+/* ================= CONTENT ================= */
+.container{
+  max-width:var(--content);
+  margin:0 auto;
+  padding:0 24px;
+}
+
+.section{
+  padding:58px 0 60px;
+}
+
+.lead{
+  max-width:980px;
+  margin:0 auto;
+  text-align:center;
+  font-size:16px;
+  line-height:1.55;
+  color:#1f2937;
+  font-weight:450;
+}
+
+/* --- CTA row under intro --- */
+.cta-row{
+  margin-top:26px;
+  display:flex;
+  justify-content:center;
+  gap:14px;
+  flex-wrap:wrap;
+}
+.btn{
+  display:inline-flex;
+  align-items:center;
+  gap:10px;
+  padding:11px 18px;
+  border-radius:999px;
+  font-size:13px;
+  border:1px solid transparent;
+  font-weight:650;
+  letter-spacing:.02em;
+  cursor:pointer;
+}
+.btn-teal{ background:#0b6a78; color:#fff; }
+.btn-outline-orange{ background:transparent; color:var(--cms-orange); border-color:var(--cms-orange); }
+.btn-ghost{ background:rgba(13,83,95,.06); color:#0d535f; border-color:rgba(13,83,95,.18); }
+
+/* --- image + text blocks --- */
+.sim{
+  display:grid;
+  grid-template-columns: 1fr 1fr;
+  gap:64px;
+  align-items:center;
+  margin-top:48px;
+}
+.sim + .sim{ margin-top:74px; }
+
+.sim .img{
+  border-radius:18px;
+  overflow:hidden;
+  background:#0d535f;
+  min-height:320px;
+}
+.sim .img img{
+  width:100%;
+  height:100%;
+  object-fit:cover;
+  display:block;
+}
+.sim h2{
+  margin:0 0 10px;
+  font-size:52px;
+  font-weight:320;
+  letter-spacing:-.6px;
+  color:#0f172a;
+  line-height:1.05;
+}
+.sim .meta{
+  font-size:12px;
+  letter-spacing:.08em;
+  text-transform:uppercase;
+  color:rgba(0,0,0,.55);
+  margin-bottom:10px;
+  font-weight:600;
+}
+.sim p{
+  margin:0 0 16px;
+  font-size:16px;
+  line-height:1.6;
+  color:#1f2937;
+  font-weight:450;
+  max-width:560px;
+}
+.sim ol{
+  margin:0 0 18px 18px;
+  padding:0;
+  color:#111827;
+}
+.sim li{
+  margin:10px 0;
+  line-height:1.55;
+  color:#111827;
+  font-weight:450;
+}
+.sim .start{
+  display:inline-flex;
+  align-items:center;
+  gap:10px;
+  color:var(--cms-orange);
+  font-weight:750;
+  letter-spacing:.03em;
+}
+
+/* --- “Who can join” / “What you'll gain” blocks --- */
+.grid-3{
+  display:grid;
+  grid-template-columns:repeat(3, 1fr);
+  gap:18px;
+  margin-top:26px;
+}
+.card{
+  border-radius:18px;
+  border:1px solid rgba(0,0,0,.12);
+  padding:18px 18px 16px;
+  background:#fff;
+}
+.card .k{
+  font-size:12px;
+  letter-spacing:.08em;
+  text-transform:uppercase;
+  color:rgba(0,0,0,.55);
+  font-weight:650;
+}
+.card .v{
+  margin-top:10px;
+  font-size:22px;
+  font-weight:320;
+  color:#0f172a;
+  line-height:1.2;
+}
+.card .s{
+  margin-top:10px;
+  color:#1f2937;
+  line-height:1.55;
+  font-size:14px;
+  font-weight:450;
+}
+
+.h2{
+  margin:0;
+  font-weight:300;
+  font-size:62px;
+  line-height:1.05;
+  letter-spacing:-.6px;
+  color:#0f172a;
+}
+.h2-sub{
+  margin:14px 0 0;
+  font-size:16px;
+  max-width:900px;
+  line-height:1.6;
+  color:#1f2937;
+  font-weight:450;
+}
+
+.bullets{
+  margin:18px 0 0;
+  padding-left:18px;
+}
+.bullets li{
+  margin:10px 0;
+  line-height:1.55;
+  font-weight:450;
+  color:#111827;
+}
+
+/* ================= SKILLS ON IMAGE (GLASS) ================= */
+.skills-stage{
+  position:relative;
+  margin-top:92px;
+  border-radius:26px;
+  overflow:hidden;
+  background:#000;
+}
+.skills-stage .bg{
+  position:absolute; inset:0;
+  width:100%; height:100%;
+  object-fit:cover;
+  transform:scale(1.03);
+}
+.skills-stage::after{
+  content:"";
+  position:absolute; inset:0;
+  background:
+    radial-gradient(1100px 720px at 30% 55%, rgba(14, 120, 135, .32), transparent 62%),
+    radial-gradient(900px 520px at 75% 35%, rgba(9, 76, 88, .30), transparent 60%),
+    linear-gradient(180deg, rgba(0,0,0,.55) 0%, rgba(0,0,0,.78) 100%);
+}
+
+.skills-stage .inner{
+  position:relative;
+  z-index:2;
+  padding:56px 0 64px;
+}
+
+.skills-head{
+  display:flex;
+  align-items:flex-end;
+  justify-content:space-between;
+  gap:28px;
+  margin-bottom:34px;
+}
+.skills-title{
+  margin:0;
+  color:#fff;
+  font-weight:260;
+  font-size:64px;
+  letter-spacing:-.6px;
+  line-height:1.05;
+}
+.skills-sub{
+  margin:0;
+  max-width:760px;
+  color:rgba(255,255,255,.82);
+  font-size:15px;
+  line-height:1.6;
+  font-weight:430;
+}
+
+/* Layout like screen: 2 on top, 3 bottom with tall middle */
+.skills-grid{
+  display:grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  grid-template-areas:
+    "a a b"
+    "c d e"
+    ". d .";
+  gap:22px;
+}
+
+/* glass cards */
+.skill-card{
+  position:relative;
+  border-radius:18px;
+  padding:22px 22px 54px;
+  min-height:170px;
+
+  background:rgba(0,0,0,.34);
+  border:1px solid rgba(255,255,255,.20);
+
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+
+  box-shadow:
+    0 0 0 1px rgba(255,255,255,.06) inset,
+    0 10px 30px rgba(0,0,0,.25);
+  color:#fff;
+}
+.skill-card h3{
+  margin:0 0 10px;
+  font-size:28px;
+  font-weight:320;
+  letter-spacing:-.2px;
+}
+.skill-card p{
+  margin:0;
+  color:rgba(255,255,255,.84);
+  line-height:1.55;
+  font-size:14px;
+  font-weight:430;
+  max-width:560px;
+}
+
+.skill-card .go{
+  position:absolute;
+  right:16px;
+  bottom:16px;
+  width:46px;
+  height:46px;
+  border-radius:999px;
+  display:grid;
+  place-items:center;
+
+  background:rgba(255,255,255,.10);
+  border:1px solid rgba(255,255,255,.22);
+}
+
+.skill-card .go svg{
+  width:22px;
+  height:22px;
+  fill:none;
+  stroke:#fff;
+  stroke-width:2;
+  stroke-linecap:round;
+  stroke-linejoin:round;
+  opacity:.95;
+}
+
+/* areas + heights */
+.skill-a{ grid-area:a; min-height:185px; }
+.skill-b{ grid-area:b; min-height:185px; }
+.skill-c{ grid-area:c; min-height:165px; }
+.skill-d{ grid-area:d; min-height:360px; }
+.skill-e{ grid-area:e; min-height:165px; }
+
+/* --- FAQ accordion --- */
+.faq{
+  margin-top:22px;
+  border-top:1px solid rgba(0,0,0,.14);
+}
+.q{
+  width:100%;
+  text-align:left;
+  padding:16px 0;
+  background:transparent;
+  border:none;
+  border-bottom:1px solid rgba(0,0,0,.14);
+  display:flex;
+  justify-content:space-between;
+  gap:18px;
+  cursor:pointer;
+}
+.q span{
+  font-size:18px;
+  font-weight:550;
+  color:#111827;
+}
+.q em{
+  font-style:normal;
+  font-size:22px;
+  line-height:1;
+  color:rgba(0,0,0,.55);
+}
+.a{
+  display:none;
+  padding:14px 0 18px;
+  color:#1f2937;
+  line-height:1.65;
+  font-weight:450;
+  max-width:980px;
+}
+.faq-item.is-on .a{ display:block; }
+.faq-item.is-on .q em{ transform:rotate(45deg); }
+
+/* ================= GLOBAL BACK-TO-TOP ================= */
+.back-top{
+  position:fixed;
+  right:28px;
+  bottom:28px;
+  width:52px;
+  height:52px;
+  border-radius:999px;
+  background:var(--cms-orange);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  z-index:1100;
+  opacity:0;
+  pointer-events:none;
+  transform:translateY(10px);
+  transition:opacity .18s ease, transform .18s ease;
+}
+.back-top.is-on{
+  opacity:1;
+  pointer-events:auto;
+  transform:translateY(0);
+}
+.back-top svg{
+  width:22px;
+  height:22px;
+  fill:none;
+  stroke:#fff;
+  stroke-width:3;
+  stroke-linecap:round;
+  stroke-linejoin:round;
+}
+
+/* ================= FOOTER ================= */
+.cms-footer{
+  margin-top:70px;
+  background-color: #115e6e;
+  background-image: radial-gradient(
+    ellipse 180% 130% at 50% -30%,
+    #022228 10%,
+    #06313a 40%,
+    transparent 85%
+  );
+  color: var(--text-white);
+  padding: 0;
+  width: 100%;
+}
+
+.footer-centered-wrap {
+  max-width: var(--container);
+  margin: 0 auto;
+  padding: 60px 40px 30px;
+  min-height: 650px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.breadcrumbs {
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin-bottom: 80px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  opacity: 0.8;
+}
+.breadcrumbs .sep { font-size: 10px; }
+
+.main-content {
+  display: flex;
+  align-items: stretch;
+  flex-grow: 1;
+}
+
+.left-col {
+  flex: 0 0 50%;
+  max-width: 50%;
+  padding-right: 60px;
+}
+
+.middle-line {
+  width: 1px;
+  background-color: var(--divider-color);
+  opacity: 0.5;
+  flex-shrink: 0;
+}
+
+.right-col {
+  flex: 0 0 50%;
+  max-width: 50%;
+  padding-left: 100px;
+}
+
+.logo-c { margin-bottom: 50px; }
+.logo-c img{ width:90px; height:90px; display:block; }
+
+.left-col h2 {
+  font-size: 56px;
+  font-weight: 350;
+  margin: 0 0 30px 0;
+  letter-spacing: -1px;
+}
+.left-col p {
+  font-size: 20px;
+  line-height: 1.5;
+  margin-bottom: 50px;
+  font-weight: 300;
+  opacity: 0.9;
+}
+.btn-orange {
+  background-color: var(--brand-orange);
+  color: white;
+  padding: 18px 38px;
+  border-radius: 40px;
+  text-decoration: none;
+  font-weight: 700;
+  font-size: 14px;
+  display: inline-flex;
+  align-items: center;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+.btn-orange:after {
+  content: "→";
+  margin-left: 12px;
+  font-size: 20px;
+  font-weight: 300;
+}
+.social {
+  margin-top: 80px;
+  display: flex;
+  gap: 30px;
+  font-size: 16px;
+  font-weight: 400;
+}
+.social a { color: white; text-decoration: none; }
+
+.footer-nav { list-style: none; padding: 0; margin: 0; }
+.footer-nav li { margin-bottom: 15px; }
+.footer-nav a {
+  color: white;
+  text-decoration: none;
+  font-size: 44px;
+  font-weight: 300;
+  line-height: 1.1;
+  display: block;
+}
+
+.bottom-bar {
+  margin-top: 60px;
+  border-top: 1px solid rgba(255,255,255,0.1);
+  padding-top: 30px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 12px;
+  letter-spacing: 1px;
+  font-weight: 600;
+  gap:20px;
+  flex-wrap:wrap;
+}
+.bottom-left-group {
+  display: flex;
+  align-items: center;
+  gap: 40px;
+}
+.a11y-icon {
+  width: 36px;
+  height: 36px;
+  border: 2px solid white;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.legal-links {
+  display: flex;
+  gap: 20px;
+  text-transform: uppercase;
+  flex-wrap:wrap;
+}
+.legal-links a { color: white; text-decoration: none; opacity: 0.8; }
+
+.scroll-up {
+  background-color: var(--brand-orange);
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  border: none;
+}
+
+/* ================= RWD ================= */
+@media (max-width:980px){
+  .header-center{ display:none; }
+  .header-right{ min-width:auto; }
+  .global-btn{ margin-left:0; }
+
+  .sim{ grid-template-columns:1fr; gap:22px; }
+  .sim h2{ font-size:40px; }
+
+  .grid-3{ grid-template-columns:1fr; }
+
+  .h2{ font-size:44px; }
+  .section{ padding:64px 0 60px; }
+
+  /* Footer Mobile */
+  .cms-footer { margin-top:40px; }
+  .footer-centered-wrap { padding: 40px 24px 24px; min-height:auto; }
+  .main-content{ flex-direction:column; gap:34px; }
+  .left-col { flex: auto; max-width: 100%; padding-right: 0; }
+  .right-col { flex: auto; max-width: 100%; padding-left: 0; }
+  .middle-line{ display:none; }
+  .footer-nav a{ font-size:34px; }
+
+  /* skills stage */
+  .skills-stage{ border-radius:0; }
+  .skills-title{ font-size:44px; }
+  .skills-head{ flex-direction:column; align-items:flex-start; }
+
+  .skills-grid{
+    grid-template-columns:1fr;
+    grid-template-areas:
+      "a"
+      "b"
+      "c"
+      "d"
+      "e";
+  }
+  .skill-d{ min-height:240px; }
+}
+</style>
+</head>
+
+<body>
+
+<section class="stage" id="hero">
+  <img class="bg" alt="" src="photocms1.jpg">
+
+  <header class="hero-header" aria-label="Header on hero">
+    <div class="inner">
+      <div class="header-row">
+        <div class="header-left">
+          <button class="burger" aria-label="Menu">
+            <svg class="icon" viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M4 6h16M4 12h16M4 18h16"></path>
+            </svg>
+          </button>
+
+          <a class="logo" href="index.html" aria-label="CMS home (mock)">
+            <img src="cms%20logo.png" alt="CMS law·tax·future">
+          </a>
+        </div>
+
+        <div class="header-center" aria-label="Primary navigation">
+          <nav class="nav-pill">
+            <a href="javascript:void(0)">Expertise ▾</a>
+            <a href="javascript:void(0)">People</a>
+            <a href="javascript:void(0)">Offices ▾</a>
+            <a href="javascript:void(0)">Innovation</a>
+            <a href="javascript:void(0)">Insights ▾</a>
+            <a href="javascript:void(0)">About CMS ▾</a>
+          </nav>
+        </div>
+
+        <div class="header-right">
+          <div class="lang">
+            <svg class="icon-solid" viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M12 22s7-6.2 7-13a7 7 0 0 0-14 0c0 6.8 7 13 7 13z"></path>
+              <circle cx="12" cy="9" r="2.6" fill="#0d535f"></circle>
+            </svg>
+            <span>Poland | EN</span>
+          </div>
+
+          <button class="burger" aria-label="Search">
+            <svg class="icon" viewBox="0 0 24 24" aria-hidden="true">
+              <circle cx="11" cy="11" r="6.5"></circle>
+              <path d="M16.2 16.2L21 21"></path>
+            </svg>
+          </button>
+        </div>
+      </div>
+
+      <a class="global-btn" href="javascript:void(0)" aria-label="Go to global job opportunities">
+        <svg class="arrow" viewBox="0 0 12 12" aria-hidden="true">
+          <path d="M7.5 2.5L3.5 6l4 3.5"></path>
+        </svg>
+        GO TO GLOBAL JOB OPPORTUNITIES
+      </a>
+    </div>
+  </header>
+
+  <div class="stage-inner">
+    <h1>Virtual internships</h1>
+    <p>Poland</p>
+  </div>
+</section>
+
+<header class="sticky-header" id="sticky" aria-label="Sticky header">
+  <div class="inner">
+    <div class="header-row">
+      <div class="header-left">
+        <button class="burger" aria-label="Menu">
+          <svg class="icon" viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M4 6h16M4 12h16M4 18h16"></path>
+          </svg>
+        </button>
+
+        <a class="logo" href="index.html" aria-label="CMS home (mock)">
+          <img src="cms%20logo.png" alt="CMS law·tax·future">
+        </a>
+      </div>
+
+      <div class="header-right">
+        <div class="lang">
+          <svg class="icon-solid" viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M12 22s7-6.2 7-13a7 7 0 0 0-14 0c0 6.8 7 13 7 13z"></path>
+            <circle cx="12" cy="9" r="2.6" fill="#0d535f"></circle>
+          </svg>
+          <span>Poland | EN</span>
+        </div>
+
+        <button class="burger" aria-label="Search">
+          <svg class="icon" viewBox="0 0 24 24" aria-hidden="true">
+            <circle cx="11" cy="11" r="6.5"></circle>
+            <path d="M16.2 16.2L21 21"></path>
+          </svg>
+        </button>
+      </div>
+    </div>
+  </div>
+</header>
+
+<main>
+  <section class="section">
+    <div class="container">
+      <p class="lead">
+        Our virtual internships are short, interactive job simulations that show you what working on real matters can look like.
+        You’ll complete tasks inspired by everyday work in a global law firm — at your own pace — and get a practical feel for
+        different practice areas before you apply.
+        <br><br>
+        Below you’ll find two simulations available in this mock: <b>Energy</b> and <b>Employment (Labour law)</b>.
+      </p>
+
+      <div class="cta-row" aria-label="Actions">
+        <a class="btn btn-outline-orange" href="przykladowabroszura1.pdf" download>DOWNLOAD MORE INFORMATION →</a>
+        <a class="btn btn-ghost" href="#simulations">JUMP TO SIMULATIONS ↓</a>
+      </div>
+
+      <div style="margin-top:70px;">
+        <h2 class="h2">Who can join?</h2>
+        <p class="h2-sub">
+          Anyone curious about commercial law, business, or how legal teams support complex projects. The simulations are designed
+          to be accessible and useful both for students and early-career candidates.
+        </p>
+
+        <div class="grid-3" aria-label="Who can join cards">
+          <div class="card">
+            <div class="k">Access</div>
+            <div class="v">Free & online</div>
+            <div class="s">Open from anywhere. Complete tasks on your laptop in a browser, whenever it suits you.</div>
+          </div>
+          <div class="card">
+            <div class="k">Time</div>
+            <div class="v">Self-paced</div>
+            <div class="s">No deadlines in this mock — work through the steps in your own rhythm.</div>
+          </div>
+          <div class="card">
+            <div class="k">Outcome</div>
+            <div class="v">Practical insight</div>
+            <div class="s">Understand the work, the language, and the typical documents you’ll see in real cases.</div>
+          </div>
+        </div>
+      </div>
+
+      <div id="simulations" style="margin-top:90px;">
+        <h2 class="h2">Step into the world of law</h2>
+        <p class="h2-sub">
+          In each simulation you’ll act like a junior team member supporting a matter. The tasks are simplified for learning,
+          but based on realistic steps and decisions — from spotting risks to drafting and reviewing documents.
+        </p>
+
+        <section class="sim" aria-label="Simulation 1">
+          <div class="img">
+            <img src="photocms2.jpg" alt="">
+          </div>
+          <div>
+            <div class="meta">Simulation 1 • Energy</div>
+            <h2>Energy: Projects & regulation</h2>
+            <p>
+              Step into an energy project scenario where legal advice supports investment decisions, compliance, and risk management.
+              You’ll work through a practical set of tasks that mirror how lawyers structure and protect a deal.
+            </p>
+            <ol>
+              <li>Identify regulatory touchpoints and the key approvals needed for a project.</li>
+              <li>Review a simplified term sheet and flag allocation of risk and responsibility.</li>
+              <li>Spot common contractual issues (scope, timelines, change control, liability).</li>
+              <li>Draft short notes for the team: risks, questions for the client, next steps.</li>
+            </ol>
+
+            <a class="start" href="registration.html?program=energy">Get started here →</a>
+          </div>
+        </section>
+
+        <section class="sim" aria-label="Simulation 2">
+          <div class="img">
+            <img src="photocms3.jpg" alt="">
+          </div>
+          <div>
+            <div class="meta">Simulation 2 • Employment</div>
+            <h2>Labour law: People & workplace (DEMO - BRAK KONTENTU)</h2>
+            <p>
+              Advise on a workplace scenario where legal teams balance business needs with employee rights and compliance obligations.
+              You’ll practise analysing facts, applying rules, and preparing clear, structured advice.
+            </p>
+            <ol>
+              <li>Assess a set of facts and determine which employment risks are most urgent.</li>
+              <li>Review draft communication to employees and improve clarity and compliance.</li>
+              <li>Identify documentation gaps and propose a checklist of required steps.</li>
+              <li>Prepare a short summary for a partner: risks, options, recommended approach.</li>
+            </ol>
+
+            <a class="start" href="javascript:void(0)">Get started here →</a>
+          </div>
+        </section>
+      </div>
+
+      <div style="margin-top:96px;">
+        <h2 class="h2">What you’ll gain</h2>
+        <p class="h2-sub">
+          Complete the simulations in your own time and use them to feel more confident with legal tasks, documents, and how teams work.
+          This is a mock page, but the learning goals mirror real programmes.
+        </p>
+        <ul class="bullets">
+          <li>Apply your studies to real-world style scenarios and commercial context.</li>
+          <li>Build confidence by tackling tasks you’d see in a junior role.</li>
+          <li>Improve your ability to explain risks clearly and propose next steps.</li>
+          <li>Get a better sense of which practice area feels right for you.</li>
+          <li>Strengthen your CV story: “I’ve tried the work and I know what it involves.”</li>
+        </ul>
+      </div>
+
+      <section class="skills-stage" aria-label="Skills you’ll learn">
+        <img class="bg" src="photocms4.jpg" alt="">
+        <div class="inner">
+          <div class="container">
+            <div class="skills-head">
+              <h2 class="skills-title">Skills you’ll learn</h2>
+              <p class="skills-sub">
+                Each simulation is built around a small roadmap of skills that are useful in applications and in day-to-day work.
+              </p>
+            </div>
+
+            <div class="skills-grid">
+              <div class="skill-card skill-a">
+                <h3>Research</h3>
+                <p>Develop your ability to conduct legal research and extract what matters for the client’s decision.</p>
+                <span class="go" aria-hidden="true">
+                  <svg viewBox="0 0 24 24">
+                    <circle cx="11" cy="11" r="8"></circle>
+                    <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                  </svg>
+                </span>
+              </div>
+
+              <div class="skill-card skill-b">
+                <h3>Drafting</h3>
+                <p>Write concise notes, risk summaries, and improvements to documents or communications.</p>
+                <span class="go" aria-hidden="true">
+                  <svg viewBox="0 0 24 24">
+                    <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+                    <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+                  </svg>
+                </span>
+              </div>
+
+              <div class="skill-card skill-c">
+                <h3>Due diligence</h3>
+                <p>Learn how teams check documents and spot legal / commercial issues early.</p>
+                <span class="go" aria-hidden="true">
+                  <svg viewBox="0 0 24 24">
+                    <path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"></path>
+                    <rect x="8" y="2" width="8" height="4" rx="1" ry="1"></rect>
+                    <path d="M9 14l2 2 4-4"></path>
+                  </svg>
+                </span>
+              </div>
+
+              <div class="skill-card skill-d">
+                <h3>Reviewing</h3>
+                <p>
+                  Identify inconsistencies, gaps, and unclear language — and propose fixes.
+                  <br><br>
+                  Gain confidence summarising issues for senior team members and preparing clear, actionable next steps.
+                </p>
+                <span class="go" aria-hidden="true">
+                  <svg viewBox="0 0 24 24">
+                    <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                    <circle cx="12" cy="12" r="3"></circle>
+                  </svg>
+                </span>
+              </div>
+
+              <div class="skill-card skill-e">
+                <h3>Commercial awareness</h3>
+                <p>Understand how legal advice connects to business risk, timelines, and stakeholder goals.</p>
+                <span class="go" aria-hidden="true">
+                  <svg viewBox="0 0 24 24">
+                    <line x1="18" y1="20" x2="18" y2="10"></line>
+                    <line x1="12" y1="20" x2="12" y2="4"></line>
+                    <line x1="6" y1="20" x2="6" y2="14"></line>
+                  </svg>
+                </span>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </section>
+
+      <div style="margin-top:92px;">
+        <h2 class="h2">Frequently asked questions</h2>
+        <p class="h2-sub">Quick answers to the most common questions about virtual internships.</p>
+
+        <div class="faq" id="faq">
+          <div class="faq-item">
+            <button class="q" type="button">
+              <span>What are virtual internships / simulations?</span>
+              <em>+</em>
+            </button>
+            <div class="a">
+              They are short, online task sets that mimic parts of a junior role. You work through a scenario, review simplified documents,
+              and practise how legal teams structure advice and manage risk.
+            </div>
+          </div>
+
+          <div class="faq-item">
+            <button class="q" type="button">
+              <span>Do I need legal experience?</span>
+              <em>+</em>
+            </button>
+            <div class="a">
+              No — the tasks are designed to be approachable. The goal is to help you understand the work and build practical confidence.
+            </div>
+          </div>
+
+          <div class="faq-item">
+            <button class="q" type="button">
+              <span>How long does it take?</span>
+              <em>+</em>
+            </button>
+            <div class="a">
+              In a typical programme it’s a few hours per simulation, but this mock is self-paced. You can do it in one sitting or split it across days.
+            </div>
+          </div>
+
+          <div class="faq-item">
+            <button class="q" type="button">
+              <span>Can I mention it on my CV or LinkedIn?</span>
+              <em>+</em>
+            </button>
+            <div class="a">
+              In real programmes — yes. In this mock, treat it as a portfolio/demo item (you can say you completed a “virtual internship style simulation”).
+            </div>
+          </div>
+
+          <div class="faq-item">
+            <button class="q" type="button">
+              <span>What do I need to complete it?</span>
+              <em>+</em>
+            </button>
+            <div class="a">
+              Just a browser and time. If you want to go deeper, keep a notebook for risks/questions, as you would in real work.
+            </div>
+          </div>
+        </div>
+
+        <div class="cta-row" style="margin-top:28px;">
+          <a class="btn btn-teal" href="registration.html?program=energy">REGISTER →</a>
+          <a class="btn btn-outline-orange" href="index.html">BACK TO JOB OPPORTUNITIES →</a>
+        </div>
+      </div>
+
+    </div>
+  </section>
+</main>
+
+<footer class="cms-footer" id="footer">
+  <div class="footer-centered-wrap">
+    <div class="breadcrumbs">
+      HOME <span class="sep">&gt;</span> CAREERS <span class="sep">&gt;</span> VIRTUAL INTERNSHIPS
+    </div>
+
+    <div class="main-content">
+      <div class="left-col">
+        <div class="logo-c">
+          <img src="cms%20C%20logo.png" alt="CMS C logo">
+        </div>
+
+        <h2>Stay informed</h2>
+        <p>For the very latest legal updates, commentary, and analysis from CMS delivered directly to your inbox, sign up to the Law-Now subscription service now.</p>
+
+        <a href="javascript:void(0)" class="btn-orange">SIGN UP NOW</a>
+
+        <div class="social">
+          <a href="javascript:void(0)">LinkedIn</a>
+          <a href="javascript:void(0)">X</a>
+        </div>
+      </div>
+
+      <div class="middle-line"></div>
+
+      <div class="right-col">
+        <ul class="footer-nav">
+          <li><a href="index.html">Home</a></li>
+          <li><a href="javascript:void(0)">Expertise</a></li>
+          <li><a href="javascript:void(0)">People</a></li>
+          <li><a href="javascript:void(0)">Offices</a></li>
+          <li><a href="javascript:void(0)">Insights</a></li>
+          <li><a href="javascript:void(0)">Innovation</a></li>
+          <li><a href="javascript:void(0)">About us</a></li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="bottom-bar">
+      <div class="bottom-left-group">
+        <div class="a11y-icon">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="white" aria-hidden="true">
+            <path d="M12 2c1.1 0 2 .9 2 2s-.9 2-2 2-2-.9-2-2 .9-2 2-2zm9 7h-6v13h-2v-6h-2v6H9V9H3V7h18v2z"/>
+          </svg>
+        </div>
+        <div>© CMS LEGAL 2026</div>
+      </div>
+
+      <div class="legal-links">
+        <a href="javascript:void(0)">Legal Information</a>
+        <a href="javascript:void(0)">Privacy Notice</a>
+        <a href="javascript:void(0)">Cookie Notice</a>
+        <a href="javascript:void(0)">Terms of Use</a>
+        <a href="javascript:void(0)">Accessibility</a>
+        <a href="javascript:void(0)">Contact</a>
+        <a href="javascript:void(0)">Sitemap</a>
+      </div>
+
+      <button class="scroll-up" type="button" aria-label="Scroll to top">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3" aria-hidden="true">
+          <path d="M18 15l-6-6-6 6"/>
+        </svg>
+      </button>
+    </div>
+  </div>
+</footer>
+
+<a class="back-top" id="backTop" href="javascript:void(0)" aria-label="Back to top">
+  <svg viewBox="0 0 24 24" aria-hidden="true">
+    <path d="M18 15l-6-6-6 6"></path>
+  </svg>
+</a>
+
+<script>
+(function(){
+  // Prevent jump on empty links
+  document.querySelectorAll('a[href="#"], a[href="javascript:void(0)"]').forEach(anchor => {
+    anchor.addEventListener('click', function(e) {
+      if(this.getAttribute('href') === '#') {
+        e.preventDefault();
+      }
+    });
+  });
+
+  const sticky = document.getElementById('sticky');
+  const hero = document.getElementById('hero');
+  const footer = document.getElementById('footer');
+  const backTop = document.getElementById('backTop');
+
+  let footerVisible = false;
+
+  function updateUI(){
+    const heroBottom = hero.getBoundingClientRect().bottom;
+    const afterHero = heroBottom <= 0;
+
+    sticky.classList.toggle('is-on', afterHero);
+
+    const showBackTop = afterHero && !footerVisible;
+    backTop.classList.toggle('is-on', showBackTop);
+  }
+
+  window.addEventListener('scroll', updateUI, {passive:true});
+  updateUI();
+
+  const io = new IntersectionObserver((entries)=>{
+    for (const ent of entries){
+      footerVisible = ent.isIntersecting;
+      updateUI();
+    }
+  }, { threshold: 0.01 });
+  io.observe(footer);
+
+  backTop.addEventListener('click', (e)=>{
+    e.preventDefault();
+    window.scrollTo({top:0, behavior:'smooth'});
+  });
+
+  const btn = document.querySelector('.scroll-up');
+  if(btn){
+    btn.addEventListener('click', ()=> window.scrollTo({top:0, behavior:'smooth'}));
+  }
+
+  const faq = document.getElementById('faq');
+  if(faq){
+    faq.addEventListener('click', (e)=>{
+      const q = e.target.closest('.q');
+      if(!q) return;
+      const item = q.closest('.faq-item');
+      item.classList.toggle('is-on');
+    });
+  }
+})();
+</script>
+
+</body>
+</html>

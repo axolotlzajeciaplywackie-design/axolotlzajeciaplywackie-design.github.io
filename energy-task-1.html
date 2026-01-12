@@ -1,0 +1,761 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>CMS – Energy internship – Task 1</title>
+
+<style>
+/* ================= ZMIENNE I STYLE BAZOWE ================= */
+:root{
+  --cms-teal:#3a6f78;
+  --cms-orange:#f37b20;
+  --cms-deep:#0d535f;
+  --text:#101315;
+  --font: system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
+  --container:1440px;
+  --content:1280px;
+  --brand-orange: #e66a1a;
+  --text-white: #ffffff;
+  --divider-color: rgba(255, 255, 255, 0.15);
+  --bg-gray: #f2f4f6; /* Szare tło dla treści zadania */
+}
+
+*{box-sizing:border-box}
+html,body{margin:0; padding:0; height: 100%;}
+
+body{
+    font-family:var(--font); 
+    color:var(--text); 
+    background:var(--bg-gray);
+    display:flex; 
+    flex-direction:column; 
+    min-height:100vh;
+}
+a{color:inherit; text-decoration:none}
+button,input,textarea{font-family:inherit}
+img{max-width:100%; display:block}
+
+/* ================= HERO (NAPRAWIONE) ================= */
+.stage{
+  position:relative;
+  height:420px;
+  /* KLUCZOWA POPRAWKA: flex-shrink:0 zapobiega zgniataniu sekcji przez body */
+  flex-shrink: 0; 
+  overflow:hidden;
+  background:#000;
+}
+
+.stage img.bg{
+  position:absolute; inset:0;
+  width:100%; height:100%;
+  /* Zapewnia brak deformacji zdjęcia */
+  object-fit:cover;
+  object-position: center;
+  z-index: 0;
+}
+
+.stage::after{
+  content:"";
+  position:absolute; inset:0;
+  z-index: 1;
+  background:linear-gradient(180deg,
+    rgba(0,0,0,.40) 0%,
+    rgba(0,0,0,.55) 55%,
+    rgba(0,0,0,.72) 100%
+  );
+}
+
+/* NAGŁÓWEK NA HERO */
+.hero-header{
+  position:absolute;
+  top:0; left:0; right:0;
+  z-index:10;
+  color:#fff;
+}
+.hero-header .inner{
+  max-width:var(--container);
+  margin:0 auto;
+  padding:14px 32px 10px;
+}
+.header-row{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:18px;
+}
+.header-left{
+  display:flex; align-items:center; gap:18px;
+}
+.header-right{
+  min-width:260px;
+  display:flex; align-items:center; justify-content:flex-end;
+  gap:18px;
+  font-size:14px;
+}
+
+/* Elementy nagłówka */
+.burger{
+  width:40px;height:40px;
+  display:grid; place-items:center;
+  background:transparent;
+  border:none; padding:0; cursor:pointer;
+}
+.icon{
+  width:18px;height:18px;
+  fill:none; stroke:#fff; stroke-width:2; stroke-linecap:round; stroke-linejoin:round;
+}
+.icon-solid{ width:18px;height:18px; fill:#fff; }
+.logo{display:flex; align-items:center;}
+.logo img{display:block; height:44px; width:auto;}
+.lang{ display:flex; align-items:center; gap:8px; color:#fff; white-space:nowrap; }
+
+.global-btn{
+  display:inline-flex; align-items:center; gap:8px;
+  margin:24px 0 0 58px; padding:8px 16px;
+  border-radius:999px; background:#fff;
+  color:var(--cms-orange); font-size:12px; font-weight:650;
+  letter-spacing:.02em;
+}
+.global-btn .arrow{
+  width:10px;height:10px; stroke:var(--cms-orange); stroke-width:2.2; fill:none; stroke-linecap:round; stroke-linejoin:round;
+}
+
+/* Napisy na Hero */
+.stage-inner{
+  position:relative;
+  z-index:2;
+  height:100%;
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+  align-items:center;
+  color:#fff;
+  text-align:center;
+  padding-top:30px;
+}
+.stage h1{
+  margin:0;
+  font-weight:220;
+  font-size:58px;
+  letter-spacing:.2px;
+  text-shadow: 0 2px 14px rgba(0,0,0,.55);
+}
+.stage p{
+  margin:12px 0 0;
+  font-size:15px;
+  opacity:.95;
+  text-shadow: 0 2px 10px rgba(0,0,0,.45);
+}
+
+/* ================= STICKY HEADER ================= */
+.sticky-header{
+  position:fixed;
+  top:0; left:0; right:0;
+  z-index:1000;
+  background:var(--cms-teal);
+  transform:translateY(-110%);
+  transition:transform .18s ease;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+}
+.sticky-header.is-on{ transform:translateY(0); }
+.sticky-header .inner{
+  max-width:var(--container);
+  margin:0 auto;
+  padding:12px 32px;
+  color:#fff;
+}
+
+/* ================= UKŁAD ZADANIA ================= */
+.wrap{
+  max-width:var(--content);
+  margin:0 auto;
+  padding:55px 24px 0;
+  display:grid;
+  grid-template-columns: 340px 1fr;
+  gap:40px;
+  margin-bottom: 80px;
+  width: 100%;
+}
+
+/* Sidebar */
+.side{
+  align-self:start;
+  border-radius:20px;
+  overflow:hidden;
+  background:#071c20;
+  border:1px solid rgba(255,255,255,.10);
+  position:sticky;
+  top:92px;
+  display: flex; flex-direction: column;
+}
+.side .side-bg{
+  position:absolute; inset:0;
+  background:
+    radial-gradient(900px 600px at 30% 35%, rgba(58,111,120,.45), transparent 60%),
+    radial-gradient(900px 600px at 70% 75%, rgba(13,83,95,.55), transparent 65%),
+    linear-gradient(180deg, rgba(0,0,0,.65), rgba(0,0,0,.86));
+  z-index: 0;
+}
+.side .inner{ position:relative; z-index:1; padding:24px; color:#fff; }
+
+.badge{ display:inline-flex; align-items:center; gap:8px; font-size:11px; letter-spacing:.08em; text-transform:uppercase; color:rgba(255,255,255,.80); font-weight: 600; margin-bottom: 20px;}
+.prog{ margin-top:0px; display:flex; align-items:center; justify-content:space-between; gap:12px; font-size:12px; color:rgba(255,255,255,.9); font-weight: 600;}
+.bar{ width:100%; height:4px; border-radius:999px; background:rgba(255,255,255,.2); overflow:hidden; margin-top:8px; }
+.bar > span{ display:block; height:100%; width:0%; background:var(--cms-orange); transition: width 0.3s ease; }
+
+.steps{ margin-top:25px; border-top:1px solid rgba(255,255,255,.15); padding-top:25px; display:flex; flex-direction:column; gap:10px; }
+.step{ display:flex; gap:12px; align-items:flex-start; padding:12px; border-radius:8px; cursor:pointer; border:1px solid transparent; transition: background 0.2s; }
+.step:hover{ background:rgba(255,255,255,.08); }
+.step.is-on{ border-color:rgba(255,255,255,.15); background:rgba(255,255,255,.10); }
+.dot{ width:20px; height:20px; border-radius:50%; border:1px solid rgba(255,255,255,.35); display:grid; place-items:center; font-size:11px; color:#fff; flex:0 0 auto; margin-top:2px; }
+.dot.done{ border-color:rgba(243,123,32,.65); background:rgba(243,123,32,.25); }
+.step .t{ font-size:13px; font-weight:600; color:#fff; }
+.step .s{ margin-top:3px; font-size:12px; color:rgba(255,255,255,.6); line-height:1.3; }
+
+.side-extra { margin-top: 25px; border-top: 1px solid rgba(255,255,255,.15); padding-top: 20px; }
+.side-h { font-size: 11px; font-weight: 700; text-transform: uppercase; color: rgba(255,255,255,.5); margin-bottom: 10px; letter-spacing: 0.5px; }
+.side-p { font-size: 12px; line-height: 1.5; color: rgba(255,255,255,.8); margin-bottom: 10px; }
+.side-p b { color: #fff; font-weight: 600; }
+.side-actions{ margin-top:25px; display:flex; gap:10px; flex-wrap:wrap; border-top:1px solid rgba(255,255,255,.15); padding-top: 20px; }
+
+.btn{ display:inline-flex; align-items:center; gap:8px; padding:8px 16px; border-radius:30px; font-size:12px; border:1px solid transparent; font-weight:700; cursor:pointer; transition:all 0.2s; }
+.btn-teal{ background:#0b6a78; color:#fff; }
+.btn-teal:hover{ background:#085661; }
+.btn-outline-orange{ background:transparent; color:var(--cms-orange); border-color:var(--cms-orange); }
+.btn-outline-orange:hover{ background:rgba(243,123,32,0.1); }
+.btn-ghost{ background:rgba(255,255,255,.10); color:#fff; border-color:rgba(255,255,255,.16); }
+.btn-ghost:hover{ background:rgba(255,255,255,.15); }
+
+/* Prawa strona (Karty) */
+.main{ display: flex; flex-direction: column; gap: 30px; padding-bottom: 30px; }
+.card{ border-radius:16px; border:1px solid rgba(0,0,0,.06); background:#fff; overflow:hidden; box-shadow: 0 4px 12px rgba(0,0,0,0.03); }
+.card-h{ padding:32px 32px 0; }
+.h{ margin:0; font-size:32px; font-weight:300; letter-spacing:-0.5px; color:#0f172a; }
+.sub{ margin:10px 0 0; color:#475569; font-weight:400; line-height:1.6; max-width:920px; font-size:16px; }
+.hr{ border-top:1px solid #eee; margin:20px 0 0; }
+.card-b{ padding:32px; }
+
+.mail{ border-radius:8px; border:1px solid #e2e8f0; padding:24px; background:#f8fafc; }
+.mail-top{ display:flex; justify-content:space-between; gap:12px; flex-wrap:wrap; font-size:13px; color:#64748b; border-bottom: 1px solid #e2e8f0; padding-bottom: 16px; margin-bottom: 16px;}
+.mail-top b{ color:#0f172a; }
+.mail p{ margin:0; line-height:1.65; color:#1e293b; font-weight:400; font-size:15px; }
+
+.dl{ display:grid; grid-template-columns:1fr 1fr; gap:16px; }
+.dl a{ display:flex; justify-content:space-between; align-items:center; gap:12px; padding:16px; border-radius:12px; border:1px solid #e2e8f0; background:#fff; transition:border-color 0.2s; }
+.dl a:hover{ border-color:var(--cms-teal); }
+.dl .name{ font-weight:600; color:#0f172a; font-size: 14px; }
+.dl .meta{ font-size:12px; color:#64748b; margin-top: 4px;}
+.dl .arr{ color:var(--cms-orange); font-weight:900; }
+
+.task-grid{ display:flex; flex-direction: column; gap:24px; }
+.box{ border-radius:12px; border:1px solid #e2e8f0; background:#fff; padding:24px; }
+.box h3{ margin:0 0 16px; font-size:18px; font-weight:600; color:#0f172a; }
+.check{ margin:0; padding-left:20px; }
+.check li{ margin:8px 0; line-height:1.6; color:#334155; font-size:15px; }
+.drop{ border-radius:12px; border:2px dashed #cbd5e1; background:#f8fafc; padding:24px; text-align: center; }
+.drop p{ margin:0 0 16px; color:#64748b; font-size: 14px;}
+.file-row{ display:flex; justify-content: center; gap:10px; flex-wrap:wrap; align-items:center; }
+.file-list{ margin-top:16px; display:flex; flex-direction:column; gap:8px; text-align: left;}
+.file-pill{ display:flex; justify-content:space-between; gap:12px; align-items:center; padding:10px 14px; border-radius:8px; border:1px solid #e2e8f0; background:#fff; font-size:13px; }
+
+.note{ width:100%; min-height:180px; resize:vertical; border-radius:12px; border:1px solid #cbd5e1; padding:16px; font-size:15px; line-height:1.6; margin-top:12px; display: block; font-family: inherit;}
+.submit-actions{ display:flex; justify-content:flex-end; gap:12px; flex-wrap:wrap; margin-top:30px; padding-top: 20px; border-top: 1px solid #eee; }
+.btn-back-task { background: transparent; border: 1px solid #cbd5e1; color: #64748b; padding: 12px 20px; border-radius: 30px; font-weight: 700; font-size: 13px; cursor: pointer; transition: all 0.2s; }
+.btn-back-task:hover { border-color: var(--cms-teal); color: var(--cms-teal); background: #f0f9fa; }
+
+/* Profil */
+.user-profile { display: flex; align-items: center; gap: 10px; cursor: pointer; border-left: 1px solid rgba(255,255,255,0.3); padding-left: 18px; margin-left: 10px; }
+.user-avatar { width: 32px; height: 32px; background-color: var(--brand-orange); color: white; border-radius: 50%; display: flex; justify-content: center; align-items: center; font-weight: 700; font-size: 13px; text-transform: uppercase; }
+.user-info { font-size: 14px; font-weight: 500; color: white; }
+
+/* STOPKA */
+.cms-footer{ margin-top:auto; background-color: #115e6e; background-image: radial-gradient(ellipse 180% 130% at 50% -30%, #022228 10%, #06313a 40%, transparent 85%); color: var(--text-white); padding: 0; width: 100%; }
+.footer-centered-wrap { max-width: var(--container); margin: 0 auto; padding: 60px 40px 30px; min-height: 650px; display: flex; flex-direction: column; justify-content: space-between; }
+.breadcrumbs { font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 80px; display: flex; align-items: center; gap: 10px; opacity: 0.8; }
+.breadcrumbs .sep { font-size: 10px; }
+.main-content { display: flex; align-items: stretch; flex-grow: 1; }
+.left-col { flex: 0 0 50%; max-width: 50%; padding-right: 60px; }
+.middle-line { width: 1px; background-color: var(--divider-color); opacity: 0.5; flex-shrink: 0; }
+.right-col { flex: 0 0 50%; max-width: 50%; padding-left: 100px; }
+.logo-c { margin-bottom: 50px; } .logo-c img{ width:90px; height:90px; display:block; }
+.left-col h2 { font-size: 56px; font-weight: 350; margin: 0 0 30px 0; letter-spacing: -1px; }
+.left-col p { font-size: 20px; line-height: 1.5; margin-bottom: 50px; font-weight: 300; opacity: 0.9; }
+.btn-orange { background-color: var(--brand-orange); color: white; padding: 18px 38px; border-radius: 40px; text-decoration: none; font-weight: 700; font-size: 14px; display: inline-flex; align-items: center; text-transform: uppercase; letter-spacing: 1px; }
+.btn-orange:after { content: "→"; margin-left: 12px; font-size: 20px; font-weight: 300; }
+.social { margin-top: 80px; display: flex; gap: 30px; font-size: 16px; font-weight: 400; } .social a { color: white; text-decoration: none; }
+.footer-nav { list-style: none; padding: 0; margin: 0; } .footer-nav li { margin-bottom: 15px; } .footer-nav a { color: white; text-decoration: none; font-size: 44px; font-weight: 300; line-height: 1.1; display: block; }
+.bottom-bar { margin-top: 60px; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 30px; display: flex; justify-content: space-between; align-items: center; font-size: 12px; letter-spacing: 1px; font-weight: 600; gap:20px; flex-wrap:wrap; }
+.bottom-left-group { display: flex; align-items: center; gap: 40px; }
+.a11y-icon { width: 36px; height: 36px; border: 2px solid white; border-radius: 50%; display: flex; justify-content: center; align-items: center; }
+.legal-links { display: flex; gap: 20px; text-transform: uppercase; flex-wrap:wrap; } .legal-links a { color: white; text-decoration: none; opacity: 0.8; }
+.scroll-up { background-color: var(--brand-orange); width: 48px; height: 48px; border-radius: 50%; display: flex; justify-content: center; align-items: center; cursor: pointer; border: none; }
+.back-top{ position:fixed; right:28px; bottom:28px; width:52px; height:52px; border-radius:999px; background:var(--cms-orange); display:flex; align-items:center; justify-content:center; z-index:1100; opacity:0; pointer-events:none; transform:translateY(10px); transition:opacity .18s ease, transform .18s ease; }
+.back-top.is-on{ opacity:1; pointer-events:auto; transform:translateY(0); }
+.back-top svg{ width:22px; height:22px; fill:none; stroke:#fff; stroke-width:3; stroke-linecap:round; stroke-linejoin:round; }
+
+@media (max-width:1100px){
+  .wrap{ grid-template-columns: 1fr; }
+  .side{ position:relative; top:auto; max-height:none; margin-bottom: 30px; min-height: auto; }
+  .side .inner{ max-height:none; overflow:visible; }
+}
+@media (max-width:980px){
+  .header-right{ min-width:auto; }
+  .cms-footer{ padding:44px 22px 22px; min-height:auto; margin-top:40px; }
+  .main-content{ flex-direction:column; gap:34px; }
+  .left-col { flex: auto; max-width: 100%; padding-right: 0; }
+  .right-col { flex: auto; max-width: 100%; padding-left: 0; }
+  .middle-line{ display:none; }
+  .footer-nav a{ font-size:34px; }
+  .dl{ grid-template-columns:1fr; }
+}
+</style>
+</head>
+
+<body>
+
+<section class="stage" id="hero">
+  <img class="bg" alt="" src="photocms_energy_hero.jpg">
+
+  <header class="hero-header" aria-label="Header on hero">
+    <div class="inner">
+      <div class="header-row">
+        <div class="header-left">
+          <button class="burger" aria-label="Menu">
+            <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h16"></path></svg>
+          </button>
+          <a class="logo" href="virtual-internships.html" aria-label="Back to Virtual internships">
+            <img src="cms%20logo.png" alt="CMS law·tax·future">
+          </a>
+        </div>
+
+        <div class="header-right">
+          <div class="user-profile" onclick="location.href='account.html'">
+             <div class="user-avatar" id="avatarHero">?</div>
+             <span class="user-info" id="nameHero">Account</span>
+          </div>
+
+          <div class="lang">
+            <svg class="icon-solid" viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M12 22s7-6.2 7-13a7 7 0 0 0-14 0c0 6.8 7 13 7 13z"></path>
+              <circle cx="12" cy="9" r="2.6" fill="#0d535f"></circle>
+            </svg>
+            <span>Poland | EN</span>
+          </div>
+          
+          <button class="burger" aria-label="Search">
+            <svg class="icon" viewBox="0 0 24 24" aria-hidden="true">
+              <circle cx="11" cy="11" r="6.5"></circle>
+              <path d="M16.2 16.2L21 21"></path>
+            </svg>
+          </button>
+        </div>
+      </div>
+
+      <a class="global-btn" href="javascript:void(0)" aria-label="Go to global job opportunities">
+        <svg class="arrow" viewBox="0 0 12 12" aria-hidden="true">
+          <path d="M7.5 2.5L3.5 6l4 3.5"></path>
+        </svg>
+        GO TO GLOBAL JOB OPPORTUNITIES
+      </a>
+    </div>
+  </header>
+
+  <div class="stage-inner">
+    <h1>Energy virtual internship</h1>
+    <p>Virtual Experience Programme</p>
+  </div>
+</section>
+
+<header class="sticky-header" id="sticky" aria-label="Sticky header">
+  <div class="inner">
+    <div class="header-row">
+      <div class="header-left">
+        <button class="burger" aria-label="Menu">
+          <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h16"></path></svg>
+        </button>
+        <a class="logo" href="virtual-internships.html" aria-label="Back">
+          <img src="cms%20logo.png" alt="CMS law·tax·future">
+        </a>
+      </div>
+      
+      <div class="header-right">
+        <div class="user-profile" onclick="location.href='account.html'">
+           <div class="user-avatar" id="avatarSticky">?</div>
+           <span class="user-info" id="nameSticky">Account</span>
+        </div>
+        <div class="lang">
+            <span>Poland | EN</span>
+        </div>
+        <button class="burger" aria-label="Search">
+          <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="6.5"></circle><path d="M16.2 16.2L21 21"></path></svg>
+        </button>
+      </div>
+    </div>
+  </div>
+</header>
+
+<main class="wrap">
+  <aside class="side">
+    <div class="side-bg"></div>
+    <div class="inner">
+      <div class="badge">Programme • Energy</div>
+      <div class="prog">
+        <span><b id="doneCount">0</b>/<span id="allCount">0</span> completed</span>
+        <span id="pctLabel">0%</span>
+      </div>
+      <div class="bar"><span id="barFill"></span></div>
+
+      <div class="steps" id="steps"></div>
+      
+      <div class="side-extra">
+          <div class="side-h">Project Context</div>
+          <p class="side-p">
+            <b>Client:</b> XYZ Photovoltaics S.A.<br>
+            <b>Project:</b> Solar Farm "Helios II"<br>
+            <b>Location:</b> Greater Poland (Wielkopolska)<br>
+            <b>Status:</b> Pre-acquisition DD
+          </p>
+          <div class="side-h" style="margin-top:20px;">Quick Tips</div>
+          <p class="side-p" style="opacity:0.7;">
+            Remember to focus on commercial risks, not just legal theory. The client needs actionable advice.
+          </p>
+      </div>
+
+      <div class="side-actions">
+        <button class="btn btn-ghost" id="reset" type="button">Reset</button>
+        <a class="btn btn-outline-orange" href="Stronastazowa.html">Back →</a>
+      </div>
+    </div>
+  </aside>
+
+  <section class="main">
+
+    <article class="card">
+      <div class="card-h">
+        <h2 class="h">Task 1: Onboarding & context</h2>
+        <p class="sub">
+          Start by understanding the matter at a high level: objective, stakeholders, timeline and key uncertainties.
+          Keep your notes structured and practical.
+        </p>
+        <div class="hr"></div>
+      </div>
+      <div class="card-b">
+        <div class="mail">
+          <div class="mail-top">
+            <span><b>From:</b> Anna Kowalska, Senior Associate (Energy)</span>
+            <span><b>Subject:</b> Welcome to the Energy team</span>
+          </div>
+          <p>
+            Hi — welcome. We’ve just had an urgent call with the CEO of <b>XYZ Photovoltaics</b>. They are moving fast on a new solar project and need quick, practical input before they commit to the next step.
+            <br><br>
+            Your deliverable for today: prepare structured notes and record a short voice message (a “quick update”) we can send to the client’s CEO — summarising the key goal, the main risks, and the top questions we need answered.
+            <br><br>
+            Please work through Task 1 and save your notes. We’ll use them in the next steps.
+          </p>
+        </div>
+      </div>
+    </article>
+
+    <article class="card">
+      <div class="card-h">
+        <h2 class="h">Materials</h2>
+        <p class="sub">Download the brief (local files in the same folder).</p>
+        <div class="hr"></div>
+      </div>
+      <div class="card-b">
+        <div class="dl">
+          <a href="Energy-Pack-01.pdf" download>
+            <div><div class="name">Energy Pack 01 — Client brief</div><div class="meta">PDF • background & objectives</div></div>
+            <div class="arr">↓</div>
+          </a>
+          <a href="Energy-Pack-02.pdf" download>
+            <div><div class="name">Energy Pack 02 — Regulatory checklist</div><div class="meta">PDF • preview for next task</div></div>
+            <div class="arr">↓</div>
+          </a>
+        </div>
+        <p class="small" style="margin-top:12px;">
+          Tip: Prioritise issues — not everything needs to be solved at once.
+        </p>
+      </div>
+    </article>
+
+    <article class="card" id="taskCard">
+      <div class="card-h">
+        <h2 class="h">Submit your work</h2>
+        <p class="sub">Upload files and/or save notes. Everything is stored locally in your browser.</p>
+        <div class="hr"></div>
+      </div>
+
+      <div class="card-b">
+        <div class="task-grid">
+
+          <div class="box">
+            <h3>What you’ll do</h3>
+            <ul class="check">
+              <li>Read the client brief and identify the project goal and commercial context.</li>
+              <li>Write 5–8 bullet points: stakeholders, timeline, key unknowns.</li>
+              <li>List 3 questions you would ask the client in the first call.</li>
+              <li>Draft a 30–60 second voice message outline for the CEO of XYZ Photovoltaics.</li>
+              <li>Save your notes and mark the task as completed.</li>
+            </ul>
+          </div>
+
+          <div class="box">
+            <h3>Upload & notes</h3>
+            <div class="drop" id="drop">
+              <p><b>Upload files</b> (drag & drop or choose).</p>
+              <div class="file-row">
+                <input id="fileInput" type="file" multiple>
+                <button class="btn btn-ghost" id="clearFiles" style="color:#666; border-color:#ccc;" type="button">Clear</button>
+              </div>
+              <div class="file-list" id="fileList"></div>
+            </div>
+
+            <div style="margin-top:14px;">
+              <div class="small" style="font-weight:750; color:#111827;">Notes</div>
+              <textarea class="note" id="notes" placeholder="Paste your bullet points / voice message outline / structured notes..."></textarea>
+
+              <div class="file-row" style="margin-top:12px; justify-content:flex-start;">
+                <button class="btn btn-teal" id="saveNotes" type="button">Save notes</button>
+                <button class="btn btn-outline-orange" id="exportNotes" type="button">Export .txt</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="submit-actions">
+          <button class="btn-back-task" onclick="history.back()">&larr; Go back to the previous task</button>
+          
+          <button class="btn btn-outline-orange" id="markDone" type="button">Mark task as done ✓</button>
+          <a class="btn btn-teal" href="energy-finish.html">Next →</a>
+        </div>
+      </div>
+    </article>
+
+  </section>
+</main>
+
+<footer class="cms-footer" id="footer">
+  <div class="footer-centered-wrap">
+    <div class="breadcrumbs">
+      HOME <span class="sep">&gt;</span> CAREERS
+    </div>
+    <div class="main-content">
+      <div class="left-col">
+        <div class="logo-c">
+          <img src="cms%20C%20logo.png" alt="CMS C logo">
+        </div>
+        <h2>Stay informed</h2>
+        <p>For the very latest legal updates, commentary, and analysis from CMS delivered directly to your inbox, sign up to the Law-Now subscription service now.</p>
+        <a href="javascript:void(0)" class="btn-orange">SIGN UP NOW</a>
+        <div class="social"><a href="javascript:void(0)">LinkedIn</a><a href="javascript:void(0)">X</a></div>
+      </div>
+      <div class="middle-line"></div>
+      <div class="right-col">
+        <ul class="footer-nav">
+          <li><a href="index.html">Home</a></li>
+          <li><a href="javascript:void(0)">Expertise</a></li>
+          <li><a href="javascript:void(0)">People</a></li>
+          <li><a href="javascript:void(0)">Offices</a></li>
+          <li><a href="javascript:void(0)">Insights</a></li>
+          <li><a href="javascript:void(0)">Innovation</a></li>
+          <li><a href="javascript:void(0)">About us</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="bottom-bar">
+      <div class="bottom-left-group">
+        <div class="a11y-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="white" aria-hidden="true"><path d="M12 2c1.1 0 2 .9 2 2s-.9 2-2 2-2-.9-2-2 .9-2 2-2zm9 7h-6v13h-2v-6h-2v6H9V9H3V7h18v2z"/></svg></div>
+        <div>© CMS LEGAL 2026</div>
+      </div>
+      <div class="legal-links">
+        <a href="javascript:void(0)">Legal Information</a><a href="javascript:void(0)">Privacy Notice</a><a href="javascript:void(0)">Cookie Notice</a><a href="javascript:void(0)">Terms of Use</a><a href="javascript:void(0)">Accessibility</a><a href="javascript:void(0)">Contact</a><a href="javascript:void(0)">Sitemap</a>
+      </div>
+      <button class="scroll-up" onclick="window.scrollTo({top:0, behavior:'smooth'})"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3" aria-hidden="true"><path d="M18 15l-6-6-6 6"/></svg></button>
+    </div>
+  </div>
+</footer>
+
+<a class="back-top" id="backTop" href="javascript:void(0)">
+  <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M18 15l-6-6-6 6"></path></svg>
+</a>
+
+<script>
+(function(){
+  document.querySelectorAll('a[href="#"], a[href="javascript:void(0)"]').forEach(anchor => {
+    anchor.addEventListener('click', function(e) {
+      if(this.getAttribute('href') === '#') e.preventDefault();
+    });
+  });
+
+  const footer = document.getElementById('footer');
+  const backTop = document.getElementById('backTop');
+  const hero = document.getElementById('hero');
+  const sticky = document.getElementById('sticky');
+
+  // PROFIL
+  const PROFILE_KEY = "cms_user_profile_v1";
+  const storedUser = localStorage.getItem(PROFILE_KEY);
+  if(storedUser) {
+      try {
+          const u = JSON.parse(storedUser);
+          const initials = (u.firstName?.[0]||"") + (u.lastName?.[0]||"");
+          const name = u.firstName || "Account";
+          ['Hero', 'Sticky'].forEach(suffix => {
+              const av = document.getElementById('avatar' + suffix);
+              const nm = document.getElementById('name' + suffix);
+              if(av) av.textContent = initials;
+              if(nm) nm.textContent = name;
+          });
+      } catch(e){}
+  }
+
+  // LOGIKA ZADANIA 1
+  const KEY = "cms_energy_programme_v1";
+  const STEPS = [
+    { id:"t1", n:1, title:"Onboarding & context", href:"energy-task-1.html", desc:"Understand the matter and capture key questions." },
+    { id:"t2", n:2, title:"Regulatory touchpoints", href:"energy-task-2.html", desc:"Map approvals, timing and practical risks." },
+    { id:"t3", n:3, title:"Term sheet risk scan", href:"energy-task-3.html", desc:"Spot issues in scope, liability, termination." },
+    { id:"t4", n:4, title:"Due diligence extracts", href:"energy-task-4.html", desc:"Identify red flags and propose next actions." },
+    { id:"t5", n:5, title:"Client-ready summary", href:"energy-task-5.html", desc:"Deliver a concise summary and next steps." }
+  ];
+  const ACTIVE_ID = "t1";
+
+  const doneCount = document.getElementById('doneCount');
+  const allCount = document.getElementById('allCount');
+  const pctLabel = document.getElementById('pctLabel');
+  const barFill = document.getElementById('barFill');
+  const stepsEl = document.getElementById('steps');
+  const markDoneBtn = document.getElementById('markDone');
+  const resetBtn = document.getElementById('reset');
+  const notesEl = document.getElementById('notes');
+  const saveNotesBtn = document.getElementById('saveNotes');
+  const exportNotesBtn = document.getElementById('exportNotes');
+  const fileInput = document.getElementById('fileInput');
+  const fileList = document.getElementById('fileList');
+  const clearFilesBtn = document.getElementById('clearFiles');
+  const drop = document.getElementById('drop');
+
+  function loadState(){
+    try{ return JSON.parse(localStorage.getItem(KEY)) || { done:{}, notes:{}, files:{} }; }
+    catch(e){ return { done:{}, notes:{}, files:{} }; }
+  }
+  const state = loadState();
+  function saveState(){ localStorage.setItem(KEY, JSON.stringify(state)); }
+
+  function renderSteps(){
+    stepsEl.innerHTML = "";
+    STEPS.forEach(s=>{
+      const row = document.createElement('div');
+      row.className = "step" + (s.id===ACTIVE_ID ? " is-on" : "");
+      row.addEventListener('click', ()=> location.href = s.href);
+      const dot = document.createElement('div');
+      dot.className = "dot" + (state.done[s.id] ? " done" : "");
+      dot.textContent = String(s.n);
+      const box = document.createElement('div');
+      box.innerHTML = `<div class="t">${s.title}</div><div class="s">${s.desc}</div>`;
+      row.appendChild(dot);
+      row.appendChild(box);
+      stepsEl.appendChild(row);
+    });
+  }
+
+  function renderProgress(){
+    const total = STEPS.length;
+    const done = STEPS.filter(s=>state.done[s.id]).length;
+    const pct = Math.round((done/total)*100);
+    allCount.textContent = String(total);
+    doneCount.textContent = String(done);
+    pctLabel.textContent = pct + "%";
+    barFill.style.width = pct + "%";
+    markDoneBtn.textContent = state.done[ACTIVE_ID] ? "Mark as not done ↺" : "Mark task as done ✓";
+  }
+
+  function loadNotes(){ notesEl.value = state.notes[ACTIVE_ID] || ""; }
+
+  saveNotesBtn.addEventListener('click', ()=>{
+    state.notes[ACTIVE_ID] = notesEl.value || "";
+    saveState();
+    saveNotesBtn.textContent = "Saved ✓";
+    setTimeout(()=> saveNotesBtn.textContent = "Save notes", 900);
+  });
+  exportNotesBtn.addEventListener('click', ()=>{
+    const blob = new Blob([notesEl.value||""], {type:"text/plain;charset=utf-8"});
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = "energy-task-1-notes.txt";
+    document.body.appendChild(a); a.click(); a.remove();
+  });
+
+  function escapeHtml(s){ return String(s).replace(/[&<>"']/g, m=>({ "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;" }[m])); }
+  function formatBytes(bytes){
+    if(bytes===0) return "0 B";
+    const k=1024, sizes=["B","KB","MB","GB"];
+    const i=Math.floor(Math.log(bytes)/Math.log(k));
+    return (bytes/Math.pow(k,i)).toFixed(i?1:0)+" "+sizes[i];
+  }
+
+  function renderFiles(){
+    const list = state.files[ACTIVE_ID] || [];
+    fileList.innerHTML = "";
+    if(list.length === 0){
+      const p = document.createElement('div'); p.className = "small"; p.textContent = "No files attached yet."; fileList.appendChild(p); return;
+    }
+    list.forEach((f, i)=>{
+      const pill = document.createElement('div');
+      pill.className = "file-pill";
+      pill.innerHTML = `<div><b>${escapeHtml(f.name)}</b> <span>(${formatBytes(f.size)})</span></div>`;
+      const del = document.createElement('button');
+      del.className = "btn btn-outline-orange"; del.type = "button"; del.style.padding = "8px 12px"; del.style.fontSize = "12px"; del.textContent = "Remove";
+      del.addEventListener('click', ()=>{ list.splice(i,1); state.files[ACTIVE_ID] = list; saveState(); renderFiles(); });
+      pill.appendChild(del);
+      fileList.appendChild(pill);
+    });
+  }
+  function addFiles(files){
+    const list = state.files[ACTIVE_ID] || [];
+    Array.from(files).forEach(f => list.push({name:f.name, size:f.size, type:f.type || ""}));
+    state.files[ACTIVE_ID] = list; saveState(); renderFiles();
+  }
+  fileInput.addEventListener('change', (e)=> { if(e.target.files.length) addFiles(e.target.files); fileInput.value=""; });
+  clearFilesBtn.addEventListener('click', ()=>{ state.files[ACTIVE_ID]=[]; saveState(); renderFiles(); });
+  drop.addEventListener('dragover', (e)=>{ e.preventDefault(); drop.style.borderColor="#0b6a78"; });
+  drop.addEventListener('dragleave', (e)=>{ e.preventDefault(); drop.style.borderColor="rgba(0,0,0,.25)"; });
+  drop.addEventListener('drop', (e)=>{ e.preventDefault(); drop.style.borderColor="rgba(0,0,0,.25)"; if(e.dataTransfer.files.length) addFiles(e.dataTransfer.files); });
+
+  markDoneBtn.addEventListener('click', ()=>{
+    state.done[ACTIVE_ID] = !state.done[ACTIVE_ID];
+    saveState(); renderSteps(); renderProgress();
+  });
+  resetBtn.addEventListener('click', ()=>{ localStorage.removeItem(KEY); location.reload(); });
+
+  let footerVisible = false;
+  function updateUI(){
+    const heroBottom = hero.getBoundingClientRect().bottom;
+    const afterHero = heroBottom <= 0;
+    sticky.classList.toggle('is-on', afterHero);
+    const showBackTop = afterHero && !footerVisible;
+    backTop.classList.toggle('is-on', showBackTop);
+  }
+  window.addEventListener('scroll', updateUI, {passive:true});
+  updateUI();
+
+  const io = new IntersectionObserver((entries)=>{
+    for (const ent of entries){
+      footerVisible = ent.isIntersecting;
+      updateUI();
+    }
+  }, { threshold: 0.01 });
+  io.observe(footer);
+
+  backTop.addEventListener('click', (e)=>{ e.preventDefault(); window.scrollTo({top:0, behavior:'smooth'}); });
+  const btnUp = document.querySelector('.scroll-up');
+  if(btnUp) btnUp.addEventListener('click', ()=> window.scrollTo({top:0, behavior:'smooth'}));
+
+  renderSteps(); renderProgress(); loadNotes(); renderFiles();
+})();
+</script>
+
+</body>
+</html>

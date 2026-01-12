@@ -1,0 +1,418 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>CMS – My Account</title>
+
+<style>
+:root{
+  --cms-teal:#3a6f78;
+  --cms-orange:#f37b20;
+  --cms-deep:#0d535f;
+  --text:#101315;
+  --font: system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
+
+  --container:1440px;
+  --content:1280px;
+
+  --brand-orange: #e66a1a;
+  --text-white: #ffffff;
+  --divider-color: rgba(255, 255, 255, 0.15);
+  --bg-gray: #f2f4f6;
+}
+
+*{box-sizing:border-box}
+html,body{margin:0}
+body{font-family:var(--font); color:var(--text); background:var(--bg-gray)}
+a{color:inherit; text-decoration:none}
+button,input,select,textarea{font-family:inherit} 
+img{max-width:100%; display:block}
+
+/* --- HERO STYLES (Z INDEX.HTML) --- */
+.stage{
+  position:relative;
+  height:460px;
+  overflow:hidden;
+  background:#000;
+}
+.stage img.bg{
+  position:absolute; inset:0;
+  width:100%; height:100%;
+  object-fit:cover;
+  transform:scale(1.04);
+}
+.stage::after{
+  content:"";
+  position:absolute; inset:0;
+  background:linear-gradient(180deg,
+    rgba(0,0,0,.38) 0%,
+    rgba(0,0,0,.50) 55%,
+    rgba(0,0,0,.66) 100%
+  );
+}
+
+.hero-header{
+  position:absolute; top:0; left:0; right:0; z-index:10; color:#fff;
+}
+.hero-header .inner{
+  max-width:var(--container); margin:0 auto; padding:14px 32px 10px;
+}
+.header-row{
+  display:flex; align-items:center; justify-content:space-between; gap:18px;
+}
+.header-left{ display:flex; align-items:center; gap:18px; min-width:auto; }
+.header-center{ flex:1; display:flex; justify-content:flex-start; align-items:center; padding-left:0; margin-left:14px; }
+.header-right{ min-width:260px; display:flex; align-items:center; justify-content:flex-end; gap:18px; font-size:14px; }
+
+.burger{ width:40px;height:40px; display:grid; place-items:center; background:transparent; border:none; padding:0; cursor:pointer; }
+.icon{ width:18px;height:18px; fill:none; stroke:#fff; stroke-width:2; stroke-linecap:round; stroke-linejoin:round; }
+.icon-solid{ width:18px;height:18px; fill:#fff; }
+.logo{display:flex; align-items:center;}
+.logo img{display:block; height:44px; width:auto;}
+
+.nav-pill{ display:flex; align-items:center; gap:26px; padding:14px 26px; border-radius:999px; background:rgba(255,255,255,.24); backdrop-filter:blur(10px); -webkit-backdrop-filter:blur(10px); }
+.nav-pill a{ color:#fff; font-size:15px; font-weight:520; white-space:nowrap; }
+
+.lang{ display:flex; align-items:center; gap:8px; color:#fff; white-space:nowrap; }
+
+.global-btn{ display:inline-flex; align-items:center; gap:8px; margin:28px 0 0 58px; padding:8px 16px; border-radius:999px; background:#fff; color:var(--cms-orange); font-size:12px; font-weight:650; letter-spacing:.02em; }
+.global-btn .arrow{ width:10px;height:10px; stroke:var(--cms-orange); stroke-width:2.2; fill:none; stroke-linecap:round; stroke-linejoin:round; }
+
+.stage-inner{ position:relative; z-index:2; height:100%; display:flex; flex-direction:column; justify-content:center; align-items:center; color:#fff; text-align:center; padding-top:36px; }
+.stage h1{ margin:0; font-weight:200; font-size:64px; letter-spacing:.2px; color:#fff; text-shadow: 0 2px 14px rgba(0,0,0,.55); }
+.stage p{ margin:14px 0 0; font-size:16px; color:#fff; text-shadow: 0 2px 10px rgba(0,0,0,.45); }
+
+/* --- STICKY HEADER --- */
+.sticky-header{ position:fixed; top:0; left:0; right:0; z-index:1000; background:var(--cms-teal); transform:translateY(-110%); transition:transform .18s ease; }
+.sticky-header.is-on{ transform:translateY(0); }
+.sticky-header .inner{ max-width:var(--container); margin:0 auto; padding:12px 32px; color:#fff; }
+.sticky-header .header-center{ display:none; }
+.sticky-header .global-btn{ display:none; }
+
+/* --- CUSTOM ACCOUNT STYLES --- */
+/* User Icon */
+.user-account { display: flex; align-items: center; gap: 10px; margin-right: 20px; cursor: pointer; }
+.user-avatar { width: 32px; height: 32px; background-color: var(--brand-orange); color: white; border-radius: 50%; display: flex; justify-content: center; align-items: center; font-weight: 700; font-size: 13px; text-transform: uppercase; }
+.user-name { font-size: 14px; font-weight: 600; color: white; display: block; }
+@media (max-width: 700px) { .user-name { display: none; } }
+
+/* Layout Grid */
+.account-wrapper {
+    max-width: 1280px;
+    margin: -60px auto 60px; /* Nachodzi lekko na hero dla efektu, lub 0 auto 60px jeśli wolisz */
+    margin-top: 60px; /* Reset marginesu górnego na bezpieczny */
+    padding: 0 24px;
+    display: grid;
+    grid-template-columns: 360px 1fr;
+    gap: 30px;
+    align-items: start;
+    position: relative; 
+    z-index: 5;
+}
+
+/* Sidebar */
+.left-stack { display: flex; flex-direction: column; gap: 24px; }
+.sidebar-card { background: white; border-radius: 20px; padding: 30px 24px; text-align: center; box-shadow: 0 4px 15px rgba(0,0,0,0.05); border: 1px solid rgba(0,0,0,0.05); }
+.profile-avatar-large { width: 90px; height: 90px; background-color: var(--brand-orange); color: white; font-size: 36px; border-radius: 50%; display: flex; justify-content: center; align-items: center; margin: 0 auto 16px; font-weight: 300; }
+.profile-fullname { font-size: 22px; font-weight: 500; color: #0f172a; margin-bottom: 4px; }
+.profile-label { font-size: 11px; text-transform: uppercase; color: #64748b; font-weight: 600; letter-spacing: 0.5px; margin-bottom: 24px; display: block;}
+.divider { height: 1px; background: #eee; margin: 20px 0; }
+.courses-section { text-align: left; }
+.courses-label { font-size: 11px; font-weight: 700; text-transform: uppercase; color: #94a3b8; margin-bottom: 10px; display: block; }
+.course-badge { display: flex; align-items: center; gap: 10px; background: #f0f9fa; color: var(--cms-deep); padding: 12px 16px; border-radius: 12px; font-weight: 600; font-size: 14px; border: 1px solid rgba(13, 83, 95, 0.1); }
+.course-badge svg { width: 18px; height: 18px; fill: currentColor; }
+.btn-logout { margin-top: 24px; width: 100%; padding: 12px; background: white; border: 1px solid #cbd5e1; color: #ef4444; font-weight: 600; border-radius: 30px; cursor: pointer; transition: all 0.2s; font-size: 13px; }
+.btn-logout:hover { background: #fef2f2; border-color: #ef4444; }
+
+/* News Cards */
+.news-header { font-size: 14px; font-weight: 700; color: #334155; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 0; padding-left: 4px; }
+.news-card { background: white; border: 1px solid #e5e7eb; border-radius: 16px; padding: 20px; display: flex; flex-direction: column; gap: 10px; box-shadow: 0 2px 8px rgba(0,0,0,0.02); transition: transform 0.2s; }
+.news-card:hover { transform: translateY(-2px); border-color: var(--cms-teal); }
+.news-tag { font-size: 10px; font-weight: 700; text-transform: uppercase; color: var(--brand-orange); }
+.news-title { font-size: 15px; font-weight: 600; color: #0f172a; line-height: 1.35; }
+.news-desc { font-size: 13px; color: #64748b; line-height: 1.5; }
+.news-link { font-size: 12px; font-weight: 600; color: var(--cms-deep); margin-top: 6px; text-decoration: underline; display: inline-block;}
+
+/* Form */
+.content-area { background: white; border: 1px solid #e5e7eb; border-radius: 20px; padding: 40px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); }
+.content-header { margin-bottom: 30px; padding-bottom: 20px; border-bottom: 1px solid #eee; }
+.content-header h2 { margin: 0; font-size: 24px; font-weight: 300; color: #0f172a; }
+.form-grid { display: grid; grid-template-columns: 1fr 1fr; column-gap: 24px; row-gap: 24px; }
+.span-2 { grid-column: 1 / -1; }
+.form-group label { display: block; font-size: 11px; font-weight: 700; text-transform: uppercase; color: #64748b; margin-bottom: 8px; letter-spacing: 0.5px; }
+.form-group input, .form-group select, .form-group textarea { width: 100%; padding: 12px; font-size: 14px; color: #1e293b; background: #fff; border: 1px solid #cbd5e1; border-radius: 8px; transition: border-color 0.2s; }
+.form-group textarea { resize: vertical; min-height: 100px; }
+.form-group input:focus, .form-group select:focus, .form-group textarea:focus { outline: none; border-color: var(--cms-teal); box-shadow: 0 0 0 3px rgba(58, 111, 120, 0.1); }
+.form-group input:disabled { background: #f8fafc; color: #94a3b8; cursor: not-allowed; }
+.interests-wrap { display: flex; flex-wrap: wrap; gap: 10px; }
+.interest-pill { display: inline-flex; align-items: center; gap: 8px; padding: 8px 14px; border: 1px solid #cbd5e1; border-radius: 20px; font-size: 13px; cursor: pointer; background: #fff; }
+.interest-pill input { width: auto; margin: 0; }
+.cv-box { background: #f8fafc; border: 1px dashed #cbd5e1; border-radius: 8px; padding: 16px; display: flex; align-items: center; justify-content: space-between; }
+.cv-info b { display: block; font-size: 14px; color: #0f172a; }
+.cv-info span { font-size: 12px; color: #64748b; }
+.cv-actions label { margin: 0; cursor: pointer; padding: 8px 12px; background: white; border: 1px solid #cbd5e1; border-radius: 6px; font-size: 12px; font-weight: 600; display: inline-block; transition: all 0.2s; }
+.cv-actions label:hover { border-color: var(--cms-deep); color: var(--cms-deep); }
+.cv-actions input { display: none; }
+
+/* PRZYCISKI AKCJI */
+.actions-row { margin-top: 30px; display: flex; justify-content: flex-end; align-items: center; padding-top: 20px; border-top: 1px solid #eee; }
+.btn-save { background: var(--cms-teal); color: white; border: none; padding: 14px 32px; border-radius: 30px; font-weight: 700; font-size: 14px; cursor: pointer; transition: background 0.2s; }
+.btn-save:hover { background: var(--cms-deep); }
+
+.btn-back-task { 
+    background: transparent; border: 1px solid #cbd5e1; color: #64748b; 
+    padding: 13px 24px; border-radius: 30px; font-weight: 600; font-size: 13px; 
+    cursor: pointer; transition: all 0.2s; margin-right: 12px; 
+}
+.btn-back-task:hover { border-color: var(--cms-orange); color: var(--cms-orange); background: white; }
+
+/* --- STOPKA Z INDEX.HTML --- */
+.cms-footer{ margin-top:auto; background-color: #115e6e; background-image: radial-gradient( ellipse 180% 130% at 50% -30%, #022228 10%, #06313a 40%, transparent 85% ); color: var(--text-white); padding: 0; width: 100%; }
+.footer-centered-wrap { max-width: var(--container); margin: 0 auto; padding: 60px 40px 30px; min-height: 650px; display: flex; flex-direction: column; justify-content: space-between; }
+.breadcrumbs { font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 80px; display: flex; align-items: center; gap: 10px; opacity: 0.8; }
+.breadcrumbs .sep { font-size: 10px; }
+.main-content { display: flex; align-items: stretch; flex-grow: 1; }
+.left-col { flex: 0 0 50%; max-width: 50%; padding-right: 60px; }
+.middle-line { width: 1px; background-color: var(--divider-color); opacity: 0.5; flex-shrink: 0; }
+.right-col { flex: 0 0 50%; max-width: 50%; padding-left: 100px; }
+.logo-c { margin-bottom: 50px; } .logo-c img{ width:90px; height:90px; display:block; }
+.left-col h2 { font-size: 56px; font-weight: 350; margin: 0 0 30px 0; letter-spacing: -1px; }
+.left-col p { font-size: 20px; line-height: 1.5; margin-bottom: 50px; font-weight: 300; opacity: 0.9; }
+.btn-orange { background-color: var(--brand-orange); color: white; padding: 18px 38px; border-radius: 40px; text-decoration: none; font-weight: 700; font-size: 14px; display: inline-flex; align-items: center; text-transform: uppercase; letter-spacing: 1px; }
+.btn-orange:after { content: "→"; margin-left: 12px; font-size: 20px; font-weight: 300; }
+.social { margin-top: 80px; display: flex; gap: 30px; font-size: 16px; font-weight: 400; } .social a { color: white; text-decoration: none; }
+.footer-nav { list-style: none; padding: 0; margin: 0; } .footer-nav li { margin-bottom: 15px; } .footer-nav a { color: white; text-decoration: none; font-size: 44px; font-weight: 300; line-height: 1.1; display: block; }
+.bottom-bar { margin-top: 60px; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 30px; display: flex; justify-content: space-between; align-items: center; font-size: 12px; letter-spacing: 1px; font-weight: 600; gap:20px; flex-wrap:wrap; }
+.bottom-left-group { display: flex; align-items: center; gap: 40px; }
+.a11y-icon { width: 36px; height: 36px; border: 2px solid white; border-radius: 50%; display: flex; justify-content: center; align-items: center; }
+.legal-links { display: flex; gap: 20px; text-transform: uppercase; flex-wrap:wrap; } .legal-links a { color: white; text-decoration: none; opacity: 0.8; }
+.scroll-up { background-color: var(--brand-orange); width: 48px; height: 48px; border-radius: 50%; display: flex; justify-content: center; align-items: center; cursor: pointer; border: none; }
+
+.back-top{ position:fixed; right:28px; bottom:28px; width:52px; height:52px; border-radius:999px; background:var(--cms-orange); display:flex; align-items:center; justify-content:center; z-index:1100; opacity:0; pointer-events:none; transform:translateY(10px); transition:opacity .18s ease, transform .18s ease; }
+.back-top.is-on{ opacity:1; pointer-events:auto; transform:translateY(0); }
+.back-top svg{ width:22px; height:22px; fill:none; stroke:#fff; stroke-width:3; stroke-linecap:round; stroke-linejoin:round; }
+
+@media (max-width:980px){
+  .header-center{ display:none; } .header-right{ min-width:auto; } .global-btn{ margin-left:0; }
+  .account-wrapper{ grid-template-columns:1fr; } .form-grid{ grid-template-columns:1fr; }
+  .cms-footer { margin-top:40px; } .footer-centered-wrap { padding: 40px 24px 24px; min-height:auto; }
+  .main-content{ flex-direction:column; gap:34px; } .left-col { flex: auto; max-width: 100%; padding-right: 0; }
+  .right-col { flex: auto; max-width: 100%; padding-left: 0; } .middle-line{ display:none; } .footer-nav a{ font-size:34px; }
+  .bottom-bar { flex-direction: column; align-items: flex-start; gap: 30px; }
+}
+</style>
+</head>
+
+<body>
+
+<section class="stage" id="hero">
+  <img class="bg" alt="" src="photocms_energy_welcome_hero.jpg">
+
+  <header class="hero-header" aria-label="Header on hero">
+    <div class="inner">
+      <div class="header-row">
+        <div class="header-left">
+          <button class="burger" aria-label="Menu">
+            <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h16"></path></svg>
+          </button>
+          <a class="logo" href="Stronastazowa.html" aria-label="Back to Virtual internships">
+            <img src="cms%20logo.png" alt="CMS law·tax·future">
+          </a>
+        </div>
+
+        <div class="header-right">
+          <div class="user-account">
+               <div class="user-avatar" id="avatarHero">?</div>
+               <span class="user-name" id="nameHero">Account</span>
+           </div>
+          <div class="lang">
+            <svg class="icon-solid" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 22s7-6.2 7-13a7 7 0 0 0-14 0c0 6.8 7 13 7 13z"></path><circle cx="12" cy="9" r="2.6" fill="#0d535f"></circle></svg>
+            <span>Poland | EN</span>
+          </div>
+          <button class="burger" aria-label="Search">
+            <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="6.5"></circle><path d="M16.2 16.2L21 21"></path></svg>
+          </button>
+        </div>
+      </div>
+
+      <a class="global-btn" href="javascript:void(0)" aria-label="Go to global job opportunities">
+        <svg class="arrow" viewBox="0 0 12 12" aria-hidden="true"><path d="M7.5 2.5L3.5 6l4 3.5"></path></svg>
+        GO TO GLOBAL JOB OPPORTUNITIES
+      </a>
+    </div>
+  </header>
+
+  <div class="stage-inner">
+    <h1>My Account</h1>
+    <p>Manage your profile, programme details, and documents.</p>
+  </div>
+</section>
+
+<header class="sticky-header" id="sticky">
+  <div class="inner">
+    <div class="header-row">
+      <div class="header-left">
+        <button class="burger"><svg class="icon" viewBox="0 0 24 24"><path d="M4 6h16M4 12h16M4 18h16"></path></svg></button>
+        <a class="logo" href="Stronastazowa.html"><img src="cms%20logo.png" alt="CMS"></a>
+      </div>
+      <div class="header-right">
+        <div class="user-account">
+             <div class="user-avatar" id="avatarSticky">?</div>
+             <span class="user-name" id="nameSticky">Account</span>
+        </div>
+        <div class="lang"><span>Poland | EN</span></div>
+      </div>
+    </div>
+  </div>
+</header>
+
+<div class="account-wrapper">
+    <div class="left-stack">
+        <aside class="sidebar-card">
+            <div class="profile-avatar-large" id="bigAvatar">?</div>
+            <div class="profile-fullname" id="cardName">...</div>
+            <span class="profile-label">Virtual Programme Participant</span>
+            <div class="divider"></div>
+            <div class="courses-section">
+                <span class="courses-label">Attended Courses</span>
+                <div class="course-badge">
+                    <svg viewBox="0 0 24 24"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"></path></svg>
+                    ENERGY
+                </div>
+            </div>
+            <button class="btn-logout" onclick="logout()">Log Out</button>
+        </aside>
+
+        <div class="news-header">CMS Highlights</div>
+        <div class="news-card">
+            <div class="news-tag">Energy Academy</div>
+            <div class="news-title">Apply for the 2026 CMS Energy Academy in Warsaw</div>
+            <div class="news-desc">An exclusive educational programme for law students. Workshops, case studies, and networking.</div>
+            <a href="#" class="news-link">Apply now →</a>
+        </div>
+        <div class="news-card">
+            <div class="news-tag">Publication</div>
+            <div class="news-title">European M&A Study 2025: Key Trends</div>
+            <div class="news-desc">Download our comprehensive analysis of over 500 deals.</div>
+            <a href="#" class="news-link">Read report →</a>
+        </div>
+        <div class="news-card">
+            <div class="news-tag">Law-Now</div>
+            <div class="news-title">Poland: New Labour Code Regulations</div>
+            <div class="news-desc">Recent changes regarding remote work. Full legal update.</div>
+            <a href="#" class="news-link">View update →</a>
+        </div>
+        <div class="news-card">
+            <div class="news-tag">Tech & Innovation</div>
+            <div class="news-title">CMS equIP: Accelerating Start-ups</div>
+            <div class="news-desc">Discover how we support tech start-ups through our dedicated legal accelerator programme.</div>
+            <a href="#" class="news-link">Learn more →</a>
+        </div>
+    </div>
+
+    <main class="content-area">
+        <div class="content-header">
+            <h2>Personal Information</h2>
+            <p>Review and update your details.</p>
+        </div>
+        <form id="profileForm">
+            <div class="form-grid">
+                <div class="form-group"><label>First Name</label><input type="text" id="inpFirst" required></div>
+                <div class="form-group"><label>Last Name</label><input type="text" id="inpLast" required></div>
+                <div class="form-group span-2"><label>Email Address (Locked)</label><input type="email" id="inpEmail" disabled></div>
+                <div class="form-group"><label>Phone Number</label><input type="text" id="inpPhone"></div>
+                <div class="form-group"><label>City / Location</label><input type="text" id="inpCity"></div>
+                <div class="form-group"><label>Student Status</label><select id="inpStudent"><option value="yes">Yes, I am a student</option><option value="no">No</option></select></div>
+                <div class="form-group"><label>University / School</label><input type="text" id="inpSchool"></div>
+                <div class="form-group"><label>Degree / Programme</label><input type="text" id="inpDegree"></div>
+                <div class="form-group"><label>Year of Study</label><select id="inpYear"><option>1</option><option>2</option><option>3</option><option>4</option><option>5</option><option>Graduate</option></select></div>
+                <div class="form-group"><label>Availability</label><select id="inpAvailability"><option>Immediately</option><option>In 1 month</option><option>In 3 months</option><option>Other</option></select></div>
+                <div class="form-group"><label>Languages</label><input type="text" id="inpLang"></div>
+                <div class="form-group"><label>Experience Level</label><select id="inpExp"><option>0–1 years</option><option>1–2 years</option><option>2–4 years</option><option>4+ years</option></select></div>
+                <div class="form-group"><label>Recent Role</label><input type="text" id="inpRole"></div>
+                <div class="form-group span-2"><label>Role Description</label><input type="text" id="inpRoleDesc"></div>
+                <div class="form-group span-2"><label>Interests</label><div class="interests-wrap"><label class="interest-pill"><input type="checkbox" name="interests" value="Energy"> Energy</label><label class="interest-pill"><input type="checkbox" name="interests" value="Employment"> Employment</label><label class="interest-pill"><input type="checkbox" name="interests" value="M&A"> M&A</label><label class="interest-pill"><input type="checkbox" name="interests" value="Disputes"> Disputes</label><label class="interest-pill"><input type="checkbox" name="interests" value="IP/Tech"> IP/Tech</label></div></div>
+                <div class="form-group span-2"><label>Links (LinkedIn / Portfolio)</label><input type="text" id="inpLinks"></div>
+                <div class="form-group span-2"><label>Motivation</label><textarea id="inpMotiv"></textarea></div>
+                <div class="form-group span-2"><label>Your CV</label><div class="cv-box"><div class="cv-info"><b id="cvName">No file uploaded</b><span id="cvSize">-</span></div><div class="cv-actions"><label>Update CV<input type="file" id="cvUpload" accept=".pdf,.doc,.docx"></label></div></div></div>
+            </div>
+            <div class="actions-row">
+                <button type="button" class="btn-back-task" onclick="history.back()">&larr; Go back to the previous task</button>
+                <button type="button" class="btn-save" onclick="saveData()">Save Changes</button>
+            </div>
+        </form>
+    </main>
+</div>
+
+<footer class="cms-footer" id="footer">
+  <div class="footer-centered-wrap">
+    <div class="breadcrumbs">HOME <span class="sep">&gt;</span> MY ACCOUNT</div>
+    <div class="main-content">
+      <div class="left-col">
+        <div class="logo-c"><img src="cms%20C%20logo.png" alt="CMS C logo"></div>
+        <h2>Stay informed</h2>
+        <p>For the very latest legal updates, commentary, and analysis from CMS delivered directly to your inbox, sign up to the Law-Now subscription service now.</p>
+        <a href="javascript:void(0)" class="btn-orange">SIGN UP NOW</a>
+        <div class="social"><a href="javascript:void(0)">LinkedIn</a><a href="javascript:void(0)">X</a></div>
+      </div>
+      <div class="middle-line"></div>
+      <div class="right-col">
+        <ul class="footer-nav">
+          <li><a href="Stronastazowa.html">Virtual internships</a></li>
+          <li><a href="javascript:void(0)">Expertise</a></li>
+          <li><a href="javascript:void(0)">People</a></li>
+          <li><a href="javascript:void(0)">Offices</a></li>
+          <li><a href="javascript:void(0)">Insights</a></li>
+          <li><a href="javascript:void(0)">Innovation</a></li>
+          <li><a href="javascript:void(0)">About us</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="bottom-bar">
+      <div class="bottom-left-group">
+        <div class="a11y-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="white" aria-hidden="true"><path d="M12 2c1.1 0 2 .9 2 2s-.9 2-2 2-2-.9-2-2 .9-2 2-2zm9 7h-6v13h-2v-6h-2v6H9V9H3V7h18v2z"/></svg></div>
+        <div>© CMS LEGAL 2026</div>
+      </div>
+      <div class="legal-links"><a href="javascript:void(0)">Legal Information</a><a href="javascript:void(0)">Privacy Notice</a><a href="javascript:void(0)">Cookie Notice</a><a href="javascript:void(0)">Terms of Use</a><a href="javascript:void(0)">Accessibility</a><a href="javascript:void(0)">Contact</a><a href="javascript:void(0)">Sitemap</a></div>
+      <button class="scroll-up" onclick="window.scrollTo({top:0, behavior:'smooth'})" aria-label="Scroll to top"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3" aria-hidden="true"><path d="M18 15l-6-6-6 6"/></svg></button>
+    </div>
+  </div>
+</footer>
+<a class="back-top" id="backTop" href="javascript:void(0)" aria-label="Back to top"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M18 15l-6-6-6 6"></path></svg></a>
+
+<script>
+const PROFILE_KEY = "cms_user_profile_v1";
+function formatBytes(bytes){ if(!bytes) return ""; const k=1024, sizes=["B","KB","MB","GB"]; const i=Math.floor(Math.log(bytes)/Math.log(k)); return (bytes/Math.pow(k,i)).toFixed(i?1:0)+" "+sizes[i]; }
+function loadAllData() {
+    const stored = localStorage.getItem(PROFILE_KEY);
+    if(!stored) { document.getElementById('cardName').textContent = "Guest User"; return; }
+    const data = JSON.parse(stored);
+    const initials = (data.firstName?.[0] || "") + (data.lastName?.[0] || "");
+    const fullName = (data.firstName || "") + " " + (data.lastName || "");
+    document.getElementById('avatarHero').textContent = initials; document.getElementById('nameHero').textContent = data.firstName;
+    document.getElementById('avatarSticky').textContent = initials; document.getElementById('nameSticky').textContent = data.firstName;
+    document.getElementById('bigAvatar').textContent = initials; document.getElementById('cardName').textContent = fullName;
+    const setVal = (id, val) => { if(document.getElementById(id)) document.getElementById(id).value = val || ""; };
+    setVal('inpFirst', data.firstName); setVal('inpLast', data.lastName); setVal('inpEmail', data.email); setVal('inpPhone', data.phone); setVal('inpCity', data.city); setVal('inpStudent', data.studentStatus); setVal('inpSchool', data.school); setVal('inpDegree', data.degree); setVal('inpYear', data.year); setVal('inpAvailability', data.availability); setVal('inpLang', data.languages); setVal('inpExp', data.experienceLevel); setVal('inpRole', data.lastRole); setVal('inpRoleDesc', data.lastRoleDesc); setVal('inpLinks', data.links); setVal('inpMotiv', data.motivation);
+    if(Array.isArray(data.interests)) { document.querySelectorAll('input[name="interests"]').forEach(cb => { cb.checked = data.interests.includes(cb.value); }); }
+    if(data.cvMeta) { document.getElementById('cvName').textContent = data.cvMeta.name; document.getElementById('cvSize').textContent = formatBytes(data.cvMeta.size); } else { document.getElementById('cvName').textContent = "No file uploaded"; document.getElementById('cvSize').textContent = "-"; }
+}
+document.getElementById('cvUpload').addEventListener('change', function(e) { const f = e.target.files[0]; if(f) { document.getElementById('cvName').textContent = f.name; document.getElementById('cvSize').textContent = formatBytes(f.size); this.dataset.tempName = f.name; this.dataset.tempSize = f.size; this.dataset.tempType = f.type; } });
+function saveData() {
+    const stored = localStorage.getItem(PROFILE_KEY); if(!stored) return; let data = JSON.parse(stored);
+    data.firstName = document.getElementById('inpFirst').value; data.lastName = document.getElementById('inpLast').value; data.phone = document.getElementById('inpPhone').value; data.city = document.getElementById('inpCity').value; data.studentStatus = document.getElementById('inpStudent').value; data.school = document.getElementById('inpSchool').value; data.degree = document.getElementById('inpDegree').value; data.year = document.getElementById('inpYear').value; data.availability = document.getElementById('inpAvailability').value; data.languages = document.getElementById('inpLang').value; data.experienceLevel = document.getElementById('inpExp').value; data.lastRole = document.getElementById('inpRole').value; data.lastRoleDesc = document.getElementById('inpRoleDesc').value; data.links = document.getElementById('inpLinks').value; data.motivation = document.getElementById('inpMotiv').value;
+    const interests = []; document.querySelectorAll('input[name="interests"]:checked').forEach(x => interests.push(x.value)); data.interests = interests;
+    const cvInput = document.getElementById('cvUpload'); if(cvInput.dataset.tempName) { data.cvMeta = { name: cvInput.dataset.tempName, size: parseInt(cvInput.dataset.tempSize), type: cvInput.dataset.tempType }; }
+    localStorage.setItem(PROFILE_KEY, JSON.stringify(data)); alert("Profile saved!"); loadAllData();
+}
+function logout() { localStorage.removeItem(PROFILE_KEY); window.location.href = 'index.html'; }
+loadAllData();
+const sticky = document.getElementById('sticky'); const hero = document.getElementById('hero'); const footer = document.getElementById('footer'); const backTop = document.getElementById('backTop'); let footerVisible = false;
+function updateUI(){ const heroBottom = hero.getBoundingClientRect().bottom; const afterHero = heroBottom <= 0; sticky.classList.toggle('is-on', afterHero); const showBackTop = afterHero && !footerVisible; backTop.classList.toggle('is-on', showBackTop); }
+window.addEventListener('scroll', updateUI, {passive:true}); updateUI();
+const io = new IntersectionObserver((entries)=>{ for (const ent of entries){ footerVisible = ent.isIntersecting; updateUI(); } }, { threshold: 0.01 }); io.observe(footer);
+backTop.addEventListener('click', (e)=>{ e.preventDefault(); window.scrollTo({top:0, behavior:'smooth'}); });
+</script>
+</body>
+</html>

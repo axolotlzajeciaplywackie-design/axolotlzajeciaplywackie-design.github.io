@@ -1,0 +1,1335 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>CMS – Virtual internship: Energy (mock Forage)</title>
+
+<style>
+:root{
+  --cms-teal:#3a6f78;
+  --cms-orange:#f37b20;
+  --cms-deep:#0d535f;
+  --text:#101315;
+  --font: system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
+
+  --container:1440px;
+  --content:1280px;
+
+  --brand-orange: #e66a1a;
+  --text-white: #ffffff;
+  --divider-color: rgba(255, 255, 255, 0.15);
+}
+
+*{box-sizing:border-box}
+html,body{margin:0}
+body{font-family:var(--font); color:var(--text); background:#fff}
+a{color:inherit; text-decoration:none}
+button,input,textarea{font-family:inherit}
+img{max-width:100%; display:block}
+
+/* ===== HERO (CMS look) ===== */
+.stage{
+  position:relative;
+  height:420px;
+  overflow:hidden;
+  background:#000;
+}
+.stage img.bg{
+  position:absolute; inset:0;
+  width:100%; height:100%;
+  object-fit:cover;
+  transform:scale(1.04);
+  filter:saturate(1.05) contrast(1.05);
+}
+.stage::after{
+  content:"";
+  position:absolute; inset:0;
+  background:linear-gradient(180deg,
+    rgba(0,0,0,.40) 0%,
+    rgba(0,0,0,.55) 55%,
+    rgba(0,0,0,.72) 100%
+  );
+}
+
+/* ===== HEADER ON HERO (NOT STICKY) ===== */
+.hero-header{
+  position:absolute;
+  top:0; left:0; right:0;
+  z-index:10;
+  color:#fff;
+}
+.hero-header .inner{
+  max-width:var(--container);
+  margin:0 auto;
+  padding:14px 32px 10px;
+}
+.header-row{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:18px;
+}
+.header-left{
+  display:flex; align-items:center; gap:18px;
+}
+.header-right{
+  min-width:260px;
+  display:flex; align-items:center; justify-content:flex-end;
+  gap:18px;
+  font-size:14px;
+}
+.burger{
+  width:40px;height:40px;
+  display:grid; place-items:center;
+  background:transparent;
+  border:none;
+  padding:0;
+  cursor:pointer;
+}
+.icon{
+  width:18px;height:18px;
+  fill:none;
+  stroke:#fff;
+  stroke-width:2;
+  stroke-linecap:round;
+  stroke-linejoin:round;
+}
+.icon-solid{
+  width:18px;height:18px;
+  fill:#fff;
+}
+.logo{display:flex; align-items:center;}
+.logo img{display:block; height:44px; width:auto;}
+.lang{
+  display:flex; align-items:center; gap:8px; color:#fff; white-space:nowrap;
+}
+.global-btn{
+  display:inline-flex;
+  align-items:center;
+  gap:8px;
+  margin:24px 0 0 58px;
+  padding:8px 16px;
+  border-radius:999px;
+  background:#fff;
+  color:var(--cms-orange);
+  font-size:12px;
+  font-weight:650;
+  letter-spacing:.02em;
+}
+.global-btn .arrow{
+  width:10px;height:10px;
+  stroke:var(--cms-orange);
+  stroke-width:2.2;
+  fill:none;
+  stroke-linecap:round;
+  stroke-linejoin:round;
+}
+
+/* ===== HERO TITLE ===== */
+.stage-inner{
+  position:relative;
+  z-index:2;
+  height:100%;
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+  align-items:center;
+  color:#fff;
+  text-align:center;
+  padding-top:30px;
+}
+.stage h1{
+  margin:0;
+  font-weight:220;
+  font-size:58px;
+  letter-spacing:.2px;
+  text-shadow: 0 2px 14px rgba(0,0,0,.55);
+}
+.stage p{
+  margin:12px 0 0;
+  font-size:15px;
+  opacity:.95;
+  text-shadow: 0 2px 10px rgba(0,0,0,.45);
+}
+
+/* ===== STICKY HEADER (APPEARS AFTER HERO) ===== */
+.sticky-header{
+  position:fixed;
+  top:0; left:0; right:0;
+  z-index:1000;
+  background:var(--cms-teal);
+  transform:translateY(-110%);
+  transition:transform .18s ease;
+}
+.sticky-header.is-on{ transform:translateY(0); }
+.sticky-header .inner{
+  max-width:var(--container);
+  margin:0 auto;
+  padding:12px 32px;
+  color:#fff;
+}
+.sticky-header .global-btn{ display:none; }
+
+/* ===== PAGE LAYOUT (Forage-like) ===== */
+.wrap{
+  max-width:var(--content);
+  margin:0 auto;
+  padding:28px 24px 0;
+  display:grid;
+  grid-template-columns: 340px 1fr;
+  gap:28px;
+}
+
+/* Sidebar */
+.side{
+  position:sticky;
+  top:84px;
+  align-self:start;
+  border-radius:20px;
+  overflow:hidden;
+  background:#071c20;
+  min-height:580px;
+  border:1px solid rgba(255,255,255,.10);
+}
+.side .side-bg{
+  position:absolute; inset:0;
+  background:
+    radial-gradient(900px 600px at 30% 35%, rgba(58,111,120,.45), transparent 60%),
+    radial-gradient(900px 600px at 70% 75%, rgba(13,83,95,.55), transparent 65%),
+    linear-gradient(180deg, rgba(0,0,0,.65), rgba(0,0,0,.85));
+}
+.side .inner{
+  position:relative;
+  padding:18px 16px 16px;
+  color:#fff;
+}
+.badge{
+  display:inline-flex;
+  align-items:center;
+  gap:8px;
+  font-size:12px;
+  letter-spacing:.08em;
+  text-transform:uppercase;
+  color:rgba(255,255,255,.80);
+}
+.prog{
+  margin-top:12px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:12px;
+  font-size:12px;
+  color:rgba(255,255,255,.78);
+}
+.bar{
+  width:100%;
+  height:8px;
+  border-radius:999px;
+  background:rgba(255,255,255,.14);
+  overflow:hidden;
+}
+.bar > span{
+  display:block;
+  height:100%;
+  width:0%;
+  background:var(--cms-orange);
+}
+
+.steps{
+  margin-top:14px;
+  border-top:1px solid rgba(255,255,255,.12);
+  padding-top:12px;
+  display:flex;
+  flex-direction:column;
+  gap:10px;
+}
+.step{
+  display:flex;
+  gap:10px;
+  align-items:flex-start;
+  padding:10px 10px;
+  border-radius:14px;
+  cursor:pointer;
+  border:1px solid transparent;
+  background:rgba(255,255,255,.06);
+}
+.step:hover{ background:rgba(255,255,255,.08); }
+.step.is-on{
+  border-color:rgba(255,255,255,.18);
+  background:rgba(255,255,255,.10);
+}
+.dot{
+  width:18px; height:18px;
+  border-radius:999px;
+  border:1px solid rgba(255,255,255,.35);
+  display:grid;
+  place-items:center;
+  font-size:11px;
+  color:#fff;
+  flex:0 0 auto;
+  margin-top:2px;
+}
+.dot.done{
+  border-color:rgba(243,123,32,.65);
+  background:rgba(243,123,32,.25);
+}
+.step .t{
+  font-size:14px;
+  font-weight:650;
+  color:#fff;
+}
+.step .s{
+  margin-top:2px;
+  font-size:12px;
+  color:rgba(255,255,255,.74);
+  line-height:1.35;
+}
+
+.side-actions{
+  margin-top:14px;
+  display:flex;
+  gap:10px;
+  flex-wrap:wrap;
+}
+.btn{
+  display:inline-flex;
+  align-items:center;
+  gap:10px;
+  padding:11px 14px;
+  border-radius:999px;
+  font-size:12px;
+  border:1px solid transparent;
+  font-weight:750;
+  letter-spacing:.02em;
+  cursor:pointer;
+}
+.btn-teal{ background:#0b6a78; color:#fff; }
+.btn-outline-orange{ background:transparent; color:var(--cms-orange); border-color:var(--cms-orange); }
+.btn-ghost{ background:rgba(255,255,255,.10); color:#fff; border-color:rgba(255,255,255,.16); }
+
+/* Main content */
+.main{
+  padding-bottom:30px;
+}
+.card{
+  border-radius:20px;
+  border:1px solid rgba(0,0,0,.12);
+  background:#fff;
+  overflow:hidden;
+}
+.card + .card{ margin-top:18px; }
+.card-h{
+  padding:18px 18px 0;
+}
+.h{
+  margin:0;
+  font-size:34px;
+  font-weight:320;
+  letter-spacing:-.4px;
+  color:#0f172a;
+}
+.sub{
+  margin:10px 0 0;
+  color:#1f2937;
+  font-weight:450;
+  line-height:1.6;
+  max-width:920px;
+}
+.hr{
+  border-top:1px solid rgba(0,0,0,.10);
+  margin:16px 0 0;
+}
+.card-b{
+  padding:16px 18px 18px;
+}
+
+/* Story email look */
+.mail{
+  border-radius:16px;
+  border:1px solid rgba(0,0,0,.12);
+  padding:14px 14px;
+  background:rgba(13,83,95,.04);
+}
+.mail-top{
+  display:flex;
+  justify-content:space-between;
+  gap:12px;
+  flex-wrap:wrap;
+  font-size:12px;
+  color:rgba(0,0,0,.65);
+  letter-spacing:.03em;
+}
+.mail-top b{ color:#0d535f; }
+.mail p{
+  margin:10px 0 0;
+  line-height:1.65;
+  color:#111827;
+  font-weight:450;
+}
+
+/* Downloads */
+.dl{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:12px;
+}
+.dl a{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:12px;
+  padding:12px 14px;
+  border-radius:16px;
+  border:1px solid rgba(0,0,0,.12);
+  background:#fff;
+}
+.dl a:hover{ border-color:rgba(13,83,95,.35); }
+.dl .name{
+  font-weight:650;
+  color:#0f172a;
+}
+.dl .meta{
+  font-size:12px;
+  color:rgba(0,0,0,.60);
+}
+.dl .arr{
+  color:var(--cms-orange);
+  font-weight:900;
+}
+
+/* Task area */
+.task-grid{
+  display:grid;
+  grid-template-columns: 1fr 360px;
+  gap:18px;
+  align-items:start;
+}
+.box{
+  border-radius:18px;
+  border:1px solid rgba(0,0,0,.12);
+  background:#fff;
+  padding:14px 14px;
+}
+.box h3{
+  margin:0 0 10px;
+  font-size:18px;
+  font-weight:650;
+  color:#0f172a;
+}
+.check{
+  margin:10px 0 0;
+  padding-left:18px;
+}
+.check li{
+  margin:8px 0;
+  line-height:1.55;
+  color:#111827;
+  font-weight:450;
+}
+.note{
+  width:100%;
+  min-height:140px;
+  resize:vertical;
+  border-radius:14px;
+  border:1px solid rgba(0,0,0,.14);
+  padding:10px 10px;
+  font-size:14px;
+  line-height:1.55;
+}
+.drop{
+  border-radius:18px;
+  border:1px dashed rgba(0,0,0,.25);
+  background:rgba(13,83,95,.04);
+  padding:14px 14px;
+}
+.drop p{
+  margin:0;
+  color:rgba(0,0,0,.70);
+  line-height:1.55;
+  font-weight:450;
+}
+.file-row{
+  margin-top:10px;
+  display:flex;
+  gap:10px;
+  flex-wrap:wrap;
+  align-items:center;
+}
+.file-list{
+  margin-top:10px;
+  display:flex;
+  flex-direction:column;
+  gap:8px;
+}
+.file-pill{
+  display:flex;
+  justify-content:space-between;
+  gap:12px;
+  align-items:center;
+  padding:10px 12px;
+  border-radius:14px;
+  border:1px solid rgba(0,0,0,.12);
+  background:#fff;
+  font-size:13px;
+}
+.file-pill span{
+  color:rgba(0,0,0,.70);
+}
+.small{
+  font-size:12px;
+  color:rgba(0,0,0,.62);
+  line-height:1.55;
+}
+
+.nav-row{
+  display:flex;
+  justify-content:space-between;
+  gap:10px;
+  flex-wrap:wrap;
+  margin-top:14px;
+}
+
+/* Back to top */
+.back-top{
+  position:fixed;
+  right:28px;
+  bottom:28px;
+  width:52px;
+  height:52px;
+  border-radius:999px;
+  background:var(--cms-orange);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  z-index:1100;
+  opacity:0;
+  pointer-events:none;
+  transform:translateY(10px);
+  transition:opacity .18s ease, transform .18s ease;
+}
+.back-top.is-on{ opacity:1; pointer-events:auto; transform:translateY(0); }
+.back-top svg{
+  width:22px; height:22px;
+  fill:none; stroke:#fff; stroke-width:3;
+  stroke-linecap:round; stroke-linejoin:round;
+}
+
+/* Footer (CMS style from your templates) */
+.cms-footer{
+  margin-top:70px;
+  background-color: #115e6e;
+  background-image: radial-gradient(
+    ellipse 180% 130% at 50% -30%,
+    #022228 10%,
+    #06313a 40%,
+    transparent 85%
+  );
+  color: var(--text-white);
+  padding: 60px 100px 30px 100px;
+  min-height: 650px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+.breadcrumbs {
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin-bottom: 80px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  opacity: 0.8;
+}
+.breadcrumbs .sep { font-size: 10px; }
+.main-content {
+  display: flex;
+  gap: 60px;
+  align-items: stretch;
+  flex-grow: 1;
+}
+.left-col { flex: 1; max-width: 500px; }
+.logo-c { margin-bottom: 50px; }
+.logo-c img{ width:90px; height:90px; display:block; }
+.left-col h2 {
+  font-size: 56px;
+  font-weight: 350;
+  margin: 0 0 30px 0;
+  letter-spacing: -1px;
+}
+.left-col p {
+  font-size: 20px;
+  line-height: 1.5;
+  margin-bottom: 50px;
+  font-weight: 300;
+  opacity: 0.9;
+}
+.btn-orange {
+  background-color: var(--brand-orange);
+  color: white;
+  padding: 18px 38px;
+  border-radius: 40px;
+  text-decoration: none;
+  font-weight: 700;
+  font-size: 14px;
+  display: inline-flex;
+  align-items: center;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+.btn-orange:after {
+  content: "→";
+  margin-left: 12px;
+  font-size: 20px;
+  font-weight: 300;
+}
+.social {
+  margin-top: 80px;
+  display: flex;
+  gap: 30px;
+  font-size: 16px;
+  font-weight: 400;
+}
+.social a { color: white; text-decoration: none; }
+.middle-line {
+  width: 1px;
+  background-color: var(--divider-color);
+  opacity: 0.5;
+}
+.right-col { flex: 1; padding-left: 40px; }
+.footer-nav { list-style: none; padding: 0; margin: 0; }
+.footer-nav li { margin-bottom: 15px; }
+.footer-nav a {
+  color: white;
+  text-decoration: none;
+  font-size: 44px;
+  font-weight: 300;
+  line-height: 1.1;
+  display: block;
+}
+.bottom-bar {
+  margin-top: 60px;
+  border-top: 1px solid rgba(255,255,255,0.1);
+  padding-top: 30px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 12px;
+  letter-spacing: 1px;
+  font-weight: 600;
+  gap:20px;
+  flex-wrap:wrap;
+}
+.bottom-left-group {
+  display: flex;
+  align-items: center;
+  gap: 40px;
+}
+.a11y-icon {
+  width: 36px;
+  height: 36px;
+  border: 2px solid white;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.legal-links {
+  display: flex;
+  gap: 20px;
+  text-transform: uppercase;
+  flex-wrap:wrap;
+}
+.legal-links a { color: white; text-decoration: none; opacity: 0.8; }
+.scroll-up {
+  background-color: var(--brand-orange);
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  border: none;
+}
+
+/* RWD */
+@media (max-width:1100px){
+  .wrap{ grid-template-columns: 1fr; }
+  .side{ position:relative; top:auto; }
+  .task-grid{ grid-template-columns:1fr; }
+}
+@media (max-width:980px){
+  .header-right{ min-width:auto; }
+  .cms-footer{ padding:44px 22px 22px; min-height:auto; margin-top:40px; }
+  .main-content{ flex-direction:column; gap:34px; }
+  .middle-line{ display:none; }
+  .right-col{ padding-left:0; }
+  .footer-nav a{ font-size:34px; }
+  .dl{ grid-template-columns:1fr; }
+}
+</style>
+</head>
+
+<body>
+
+<section class="stage" id="hero">
+  <img class="bg" alt="" src="photocms_energy_hero.jpg">
+
+  <header class="hero-header" aria-label="Header on hero">
+    <div class="inner">
+      <div class="header-row">
+        <div class="header-left">
+          <button class="burger" aria-label="Menu">
+            <svg class="icon" viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M4 6h16M4 12h16M4 18h16"></path>
+            </svg>
+          </button>
+
+          <a class="logo" href="virtual-internships.html" aria-label="Back to Virtual internships">
+            <img src="cms%20logo.png" alt="CMS law·tax·future">
+          </a>
+        </div>
+
+        <div class="header-right">
+          <div class="lang">
+            <svg class="icon-solid" viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M12 22s7-6.2 7-13a7 7 0 0 0-14 0c0 6.8 7 13 7 13z"></path>
+              <circle cx="12" cy="9" r="2.6" fill="#0d535f"></circle>
+            </svg>
+            <span>Poland | EN</span>
+          </div>
+
+          <button class="burger" aria-label="Search">
+            <svg class="icon" viewBox="0 0 24 24" aria-hidden="true">
+              <circle cx="11" cy="11" r="6.5"></circle>
+              <path d="M16.2 16.2L21 21"></path>
+            </svg>
+          </button>
+        </div>
+      </div>
+
+      <a class="global-btn" href="javascript:void(0)" aria-label="Go to global job opportunities">
+        <svg class="arrow" viewBox="0 0 12 12" aria-hidden="true">
+          <path d="M7.5 2.5L3.5 6l4 3.5"></path>
+        </svg>
+        GO TO GLOBAL JOB OPPORTUNITIES
+      </a>
+    </div>
+  </header>
+
+  <div class="stage-inner">
+    <h1>Energy virtual internship</h1>
+    <p>Mock Forage-style • CMS branding</p>
+  </div>
+</section>
+
+<header class="sticky-header" id="sticky" aria-label="Sticky header">
+  <div class="inner">
+    <div class="header-row">
+      <div class="header-left" style="display:flex; align-items:center; gap:18px;">
+        <button class="burger" aria-label="Menu">
+          <svg class="icon" viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M4 6h16M4 12h16M4 18h16"></path>
+          </svg>
+        </button>
+        <a class="logo" href="virtual-internships.html" aria-label="Back">
+          <img src="cms%20logo.png" alt="CMS law·tax·future">
+        </a>
+      </div>
+
+      <div class="header-right">
+        <div class="lang">
+          <svg class="icon-solid" viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M12 22s7-6.2 7-13a7 7 0 0 0-14 0c0 6.8 7 13 7 13z"></path>
+            <circle cx="12" cy="9" r="2.6" fill="#0d535f"></circle>
+          </svg>
+          <span>Poland | EN</span>
+        </div>
+        <button class="burger" aria-label="Search">
+          <svg class="icon" viewBox="0 0 24 24" aria-hidden="true">
+            <circle cx="11" cy="11" r="6.5"></circle>
+            <path d="M16.2 16.2L21 21"></path>
+          </svg>
+        </button>
+      </div>
+    </div>
+  </div>
+</header>
+
+<main class="wrap">
+  <!-- LEFT: steps -->
+  <aside class="side" aria-label="Internship steps">
+    <div class="side-bg" aria-hidden="true"></div>
+    <div class="inner">
+      <div class="badge">Virtual internship • Energy</div>
+
+      <div class="prog">
+        <span><b id="doneCount">0</b>/<span id="allCount">5</span> completed</span>
+        <span id="pctLabel">0%</span>
+      </div>
+      <div class="bar" aria-hidden="true"><span id="barFill"></span></div>
+
+      <div class="steps" id="steps">
+        <!-- injected by JS -->
+      </div>
+
+      <div class="side-actions">
+        <button class="btn btn-ghost" id="reset" type="button">Reset progress</button>
+        <a class="btn btn-outline-orange" href="virtual-internships.html">Back →</a>
+      </div>
+    </div>
+  </aside>
+
+  <!-- RIGHT: content -->
+  <section class="main" aria-label="Task content">
+
+    <article class="card" id="overview">
+      <div class="card-h">
+        <h2 class="h">Task overview</h2>
+        <p class="sub">
+          Welcome to a Forage-style simulation under the CMS brand. You’ll work through a realistic Energy matter:
+          regulations, term sheet risks, contractual issues, and a short client-ready summary.
+        </p>
+        <div class="hr"></div>
+      </div>
+      <div class="card-b">
+        <div class="mail" aria-label="Welcome message">
+          <div class="mail-top">
+            <span><b>From:</b> Anna Kowalska, Senior Associate (Energy)</span>
+            <span><b>Subject:</b> Welcome to the Energy team</span>
+          </div>
+          <p>
+            Hi! Great to have you on the team. This week you’ll support us on a cross-border energy project.
+            Your tasks are simplified, but they reflect what juniors actually do: spot regulatory touchpoints,
+            review a term sheet, flag contractual risks, and prepare a concise note for the team.
+            <br><br>
+            Use the downloadable pack, keep your notes structured, and “submit” your work by uploading files or pasting text.
+            <br><br>
+            Good luck — and treat it like day one on a real matter.
+          </p>
+        </div>
+      </div>
+    </article>
+
+    <article class="card" id="materials">
+      <div class="card-h">
+        <h2 class="h">Materials to download</h2>
+        <p class="sub">Use these files to complete tasks. (Local downloads — works from a folder.)</p>
+        <div class="hr"></div>
+      </div>
+      <div class="card-b">
+        <div class="dl" aria-label="Downloads">
+          <a href="Energy-Pack-01_Brief.pdf" download>
+            <div>
+              <div class="name">Energy Pack 01 — Client brief</div>
+              <div class="meta">PDF • background & objectives</div>
+            </div>
+            <div class="arr">↓</div>
+          </a>
+
+          <a href="Energy-Pack-02_TermSheet.pdf" download>
+            <div>
+              <div class="name">Energy Pack 02 — Term sheet</div>
+              <div class="meta">PDF • simplified terms</div>
+            </div>
+            <div class="arr">↓</div>
+          </a>
+
+          <a href="Energy-Pack-03_RegulatoryChecklist.pdf" download>
+            <div>
+              <div class="name">Energy Pack 03 — Regulatory checklist</div>
+              <div class="meta">PDF • approvals & touchpoints</div>
+            </div>
+            <div class="arr">↓</div>
+          </a>
+
+          <a href="Energy-Pack-04_DueDiligence-Extracts.pdf" download>
+            <div>
+              <div class="name">Energy Pack 04 — Due diligence extracts</div>
+              <div class="meta">PDF • clauses & red flags</div>
+            </div>
+            <div class="arr">↓</div>
+          </a>
+        </div>
+
+        <p class="small" style="margin-top:12px;">
+          Tip: create one file per task (e.g., Task-2-Notes.docx or Task-4-Email.txt), then upload it in the task panel.
+        </p>
+      </div>
+    </article>
+
+    <article class="card" id="taskCard">
+      <div class="card-h">
+        <h2 class="h" id="taskTitle">Task</h2>
+        <p class="sub" id="taskIntro"></p>
+        <div class="hr"></div>
+      </div>
+
+      <div class="card-b">
+        <div class="task-grid">
+          <div class="box" aria-label="What you'll do">
+            <h3>What you’ll do</h3>
+            <ul class="check" id="taskList"></ul>
+
+            <div class="nav-row">
+              <button class="btn btn-ghost" id="prev" type="button">← Previous</button>
+              <button class="btn btn-outline-orange" id="markDone" type="button">Mark task as done ✓</button>
+              <button class="btn btn-teal" id="next" type="button">Next →</button>
+            </div>
+          </div>
+
+          <div class="box" aria-label="Submit your work">
+            <h3>Submit your work</h3>
+
+            <div class="drop" id="drop">
+              <p><b>Upload files</b> (drag & drop or choose). They won’t be sent anywhere — it’s a local mock.</p>
+              <div class="file-row">
+                <input id="fileInput" type="file" multiple>
+                <button class="btn btn-ghost" id="clearFiles" type="button">Clear</button>
+              </div>
+              <div class="file-list" id="fileList"></div>
+            </div>
+
+            <div style="margin-top:12px;">
+              <p class="small" style="margin:0 0 8px;"><b>Notes / draft text</b> (saved locally in your browser)</p>
+              <textarea class="note" id="notes" placeholder="Paste your draft, bullet points, or final answer here..."></textarea>
+              <div class="file-row" style="margin-top:10px;">
+                <button class="btn btn-teal" id="saveNotes" type="button">Save notes</button>
+                <button class="btn btn-outline-orange" id="exportNotes" type="button">Export .txt</button>
+              </div>
+              <p class="small" style="margin-top:8px;">
+                Saved automatically per task. If you reopen the file later, your progress stays.
+              </p>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </article>
+
+  </section>
+</main>
+
+<footer class="cms-footer" id="footer">
+  <div class="breadcrumbs">
+    HOME <span class="sep">&gt;</span> CAREERS <span class="sep">&gt;</span> VIRTUAL INTERNSHIPS <span class="sep">&gt;</span> ENERGY
+  </div>
+
+  <div class="main-content">
+    <div class="left-col">
+      <div class="logo-c">
+        <img src="cms%20C%20logo.png" alt="CMS C logo">
+      </div>
+
+      <h2>Stay informed</h2>
+      <p>For the very latest legal updates, commentary, and analysis from CMS delivered directly to your inbox, sign up to the Law-Now subscription service now.</p>
+
+      <a href="javascript:void(0)" class="btn-orange">SIGN UP NOW</a>
+
+      <div class="social">
+        <a href="javascript:void(0)">LinkedIn</a>
+        <a href="javascript:void(0)">X</a>
+      </div>
+    </div>
+
+    <div class="middle-line"></div>
+
+    <div class="right-col">
+      <ul class="footer-nav">
+        <li><a href="virtual-internships.html">Virtual internships</a></li>
+        <li><a href="javascript:void(0)">Expertise</a></li>
+        <li><a href="javascript:void(0)">People</a></li>
+        <li><a href="javascript:void(0)">Offices</a></li>
+        <li><a href="javascript:void(0)">Insights</a></li>
+        <li><a href="javascript:void(0)">Innovation</a></li>
+        <li><a href="javascript:void(0)">About us</a></li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="bottom-bar">
+    <div class="bottom-left-group">
+      <div class="a11y-icon">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="white" aria-hidden="true">
+          <path d="M12 2c1.1 0 2 .9 2 2s-.9 2-2 2-2-.9-2-2 .9-2 2-2zm9 7h-6v13h-2v-6h-2v6H9V9H3V7h18v2z"/>
+        </svg>
+      </div>
+      <div>© CMS LEGAL 2026</div>
+    </div>
+
+    <div class="legal-links">
+      <a href="javascript:void(0)">Legal Information</a>
+      <a href="javascript:void(0)">Privacy Notice</a>
+      <a href="javascript:void(0)">Cookie Notice</a>
+      <a href="javascript:void(0)">Terms of Use</a>
+      <a href="javascript:void(0)">Accessibility</a>
+      <a href="javascript:void(0)">Contact</a>
+      <a href="javascript:void(0)">Sitemap</a>
+    </div>
+
+    <button class="scroll-up" type="button" aria-label="Scroll to top">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3" aria-hidden="true">
+        <path d="M18 15l-6-6-6 6"/>
+      </svg>
+    </button>
+  </div>
+</footer>
+
+<a class="back-top" id="backTop" href="javascript:void(0)" aria-label="Back to top">
+  <svg viewBox="0 0 24 24" aria-hidden="true">
+    <path d="M18 15l-6-6-6 6"></path>
+  </svg>
+</a>
+
+<script>
+(function(){
+  const sticky = document.getElementById('sticky');
+  const hero = document.getElementById('hero');
+  const footer = document.getElementById('footer');
+  const backTop = document.getElementById('backTop');
+
+  // ===== Task data (Energy) =====
+  const TASKS = [
+    {
+      id: "t1",
+      title: "Task 1: Onboarding & context",
+      intro: "Read the brief and build a quick mental map of the matter. Keep it practical: goals, stakeholders, what could go wrong.",
+      bullets: [
+        "Download Energy Pack 01 (Client brief) and skim it like a junior would.",
+        "Write 5–8 bullet points: project goal, timeline, key stakeholders, biggest unknowns.",
+        "List 3 questions you would ask the client in your first call.",
+        "Save your notes (or upload a short .txt/.docx)."
+      ]
+    },
+    {
+      id: "t2",
+      title: "Task 2: Regulatory touchpoints",
+      intro: "Spot the regulatory angles and approvals. You’re not writing a thesis — just what matters for next steps.",
+      bullets: [
+        "Use Energy Pack 03 (Regulatory checklist).",
+        "Identify key approvals / permits and who issues them (high-level).",
+        "Flag 3 risks: timing, compliance, or documentation gaps.",
+        "Draft a short email to the team: what approvals we need + next steps (max 10 lines)."
+      ]
+    },
+    {
+      id: "t3",
+      title: "Task 3: Term sheet risk scan",
+      intro: "Review a simplified term sheet and spot risk allocation problems. Focus on the clauses juniors often flag first.",
+      bullets: [
+        "Download Energy Pack 02 (Term sheet).",
+        "Flag clauses on: scope, timeline, change control, liability, termination.",
+        "Write a 1-page note: top 5 red flags + suggested improvements.",
+        "Optional: add 2 questions you’d ask the commercial team."
+      ]
+    },
+    {
+      id: "t4",
+      title: "Task 4: Due diligence extracts",
+      intro: "You’ll do a mini due diligence pass on extracts. Highlight risky wording and explain why it matters.",
+      bullets: [
+        "Download Energy Pack 04 (Due diligence extracts).",
+        "Mark clauses that could create legal/financial/reputational risk.",
+        "Summarise each red flag in one sentence + proposed fix / next action.",
+        "Prepare a checklist for the next document request (5 items)."
+      ]
+    },
+    {
+      id: "t5",
+      title: "Task 5: Client-ready summary",
+      intro: "Close the loop: write a concise summary the partner could use to brief the client — clear, structured, actionable.",
+      bullets: [
+        "Write a short executive summary: situation → risks → options → recommendation.",
+        "Keep it plain language (no heavy legalese).",
+        "Include a timeline-style next steps list (5 bullets).",
+        "Mark the task as done to finish the simulation."
+      ]
+    }
+  ];
+
+  // ===== State (localStorage) =====
+  const KEY = "cms_energy_sim_v1";
+  const state = loadState();
+
+  function loadState(){
+    try{
+      return JSON.parse(localStorage.getItem(KEY)) || { active: "t1", done: {}, notes: {}, files: {} };
+    }catch(e){
+      return { active: "t1", done: {}, notes: {}, files: {} };
+    }
+  }
+  function saveState(){
+    localStorage.setItem(KEY, JSON.stringify(state));
+  }
+
+  // ===== UI refs =====
+  const stepsEl = document.getElementById('steps');
+  const taskTitle = document.getElementById('taskTitle');
+  const taskIntro = document.getElementById('taskIntro');
+  const taskList = document.getElementById('taskList');
+  const prevBtn = document.getElementById('prev');
+  const nextBtn = document.getElementById('next');
+  const markDoneBtn = document.getElementById('markDone');
+
+  const notesEl = document.getElementById('notes');
+  const saveNotesBtn = document.getElementById('saveNotes');
+  const exportNotesBtn = document.getElementById('exportNotes');
+
+  const fileInput = document.getElementById('fileInput');
+  const fileList = document.getElementById('fileList');
+  const clearFilesBtn = document.getElementById('clearFiles');
+  const drop = document.getElementById('drop');
+
+  const doneCount = document.getElementById('doneCount');
+  const allCount = document.getElementById('allCount');
+  const pctLabel = document.getElementById('pctLabel');
+  const barFill = document.getElementById('barFill');
+  const resetBtn = document.getElementById('reset');
+
+  // ===== Render steps =====
+  function renderSteps(){
+    stepsEl.innerHTML = "";
+    TASKS.forEach((t, idx)=>{
+      const a = document.createElement('div');
+      a.className = "step" + (t.id === state.active ? " is-on" : "");
+      a.dataset.id = t.id;
+
+      const d = document.createElement('div');
+      d.className = "dot" + (state.done[t.id] ? " done" : "");
+      d.textContent = String(idx+1);
+
+      const box = document.createElement('div');
+      const tt = document.createElement('div');
+      tt.className = "t";
+      tt.textContent = t.title.replace(/^Task \d+:\s*/,"");
+      const ss = document.createElement('div');
+      ss.className = "s";
+      ss.textContent = t.intro;
+
+      box.appendChild(tt);
+      box.appendChild(ss);
+
+      a.appendChild(d);
+      a.appendChild(box);
+
+      a.addEventListener('click', ()=> setActive(t.id));
+      stepsEl.appendChild(a);
+    });
+  }
+
+  // ===== Render task =====
+  function renderTask(){
+    const t = TASKS.find(x=>x.id===state.active) || TASKS[0];
+
+    taskTitle.textContent = t.title;
+    taskIntro.textContent = t.intro;
+
+    taskList.innerHTML = "";
+    t.bullets.forEach(b=>{
+      const li = document.createElement('li');
+      li.textContent = b;
+      taskList.appendChild(li);
+    });
+
+    notesEl.value = state.notes[t.id] || "";
+    renderFiles();
+
+    // button states
+    const idx = TASKS.findIndex(x=>x.id===t.id);
+    prevBtn.disabled = idx===0;
+    nextBtn.disabled = idx===TASKS.length-1;
+
+    markDoneBtn.textContent = state.done[t.id] ? "Mark as not done ↺" : "Mark task as done ✓";
+  }
+
+  function renderFiles(){
+    const tId = state.active;
+    const list = state.files[tId] || [];
+    fileList.innerHTML = "";
+
+    if(list.length === 0){
+      const p = document.createElement('div');
+      p.className = "small";
+      p.textContent = "No files attached yet.";
+      fileList.appendChild(p);
+      return;
+    }
+
+    list.forEach((f, i)=>{
+      const row = document.createElement('div');
+      row.className = "file-pill";
+      row.innerHTML = `<div><b>${escapeHtml(f.name)}</b> <span>(${formatBytes(f.size)})</span></div>`;
+      const del = document.createElement('button');
+      del.className = "btn btn-outline-orange";
+      del.type = "button";
+      del.style.padding = "8px 12px";
+      del.style.fontSize = "12px";
+      del.textContent = "Remove";
+      del.addEventListener('click', ()=>{
+        list.splice(i,1);
+        state.files[tId] = list;
+        saveState();
+        renderFiles();
+      });
+      row.appendChild(del);
+      fileList.appendChild(row);
+    });
+  }
+
+  function renderProgress(){
+    const total = TASKS.length;
+    const done = TASKS.filter(t=>state.done[t.id]).length;
+    const pct = Math.round((done/total)*100);
+
+    allCount.textContent = String(total);
+    doneCount.textContent = String(done);
+    pctLabel.textContent = pct + "%";
+    barFill.style.width = pct + "%";
+  }
+
+  function setActive(id){
+    state.active = id;
+    saveState();
+    renderSteps();
+    renderTask();
+    renderProgress();
+    window.scrollTo({ top: document.getElementById('taskCard').offsetTop - 70, behavior:'smooth' });
+  }
+
+  // ===== Controls =====
+  prevBtn.addEventListener('click', ()=>{
+    const idx = TASKS.findIndex(x=>x.id===state.active);
+    if(idx>0) setActive(TASKS[idx-1].id);
+  });
+  nextBtn.addEventListener('click', ()=>{
+    const idx = TASKS.findIndex(x=>x.id===state.active);
+    if(idx<TASKS.length-1) setActive(TASKS[idx+1].id);
+  });
+  markDoneBtn.addEventListener('click', ()=>{
+    const id = state.active;
+    state.done[id] = !state.done[id];
+    saveState();
+    renderSteps();
+    renderTask();
+    renderProgress();
+  });
+
+  saveNotesBtn.addEventListener('click', ()=>{
+    state.notes[state.active] = notesEl.value || "";
+    saveState();
+    saveNotesBtn.textContent = "Saved ✓";
+    setTimeout(()=> saveNotesBtn.textContent = "Save notes", 900);
+  });
+
+  exportNotesBtn.addEventListener('click', ()=>{
+    const t = TASKS.find(x=>x.id===state.active);
+    const content = notesEl.value || "";
+    const blob = new Blob([content], {type:"text/plain;charset=utf-8"});
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = (t.title.replace(/[:]/g,"").replace(/\s+/g,"-")).toLowerCase() + ".txt";
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    URL.revokeObjectURL(a.href);
+  });
+
+  resetBtn.addEventListener('click', ()=>{
+    localStorage.removeItem(KEY);
+    location.reload();
+  });
+
+  // ===== File handling (local only) =====
+  function addFiles(fileListObj){
+    const tId = state.active;
+    const list = state.files[tId] || [];
+    Array.from(fileListObj).forEach(f=>{
+      list.push({ name: f.name, size: f.size, type: f.type || "" });
+    });
+    state.files[tId] = list;
+    saveState();
+    renderFiles();
+  }
+
+  fileInput.addEventListener('change', (e)=>{
+    if(e.target.files) addFiles(e.target.files);
+    fileInput.value = "";
+  });
+
+  clearFilesBtn.addEventListener('click', ()=>{
+    state.files[state.active] = [];
+    saveState();
+    renderFiles();
+  });
+
+  // drag & drop
+  ['dragenter','dragover'].forEach(evt=>{
+    drop.addEventListener(evt, (e)=>{
+      e.preventDefault(); e.stopPropagation();
+      drop.style.borderColor = "rgba(13,83,95,.55)";
+    });
+  });
+  ['dragleave','drop'].forEach(evt=>{
+    drop.addEventListener(evt, (e)=>{
+      e.preventDefault(); e.stopPropagation();
+      drop.style.borderColor = "rgba(0,0,0,.25)";
+    });
+  });
+  drop.addEventListener('drop', (e)=>{
+    if(e.dataTransfer && e.dataTransfer.files) addFiles(e.dataTransfer.files);
+  });
+
+  // ===== Sticky + back top =====
+  let footerVisible = false;
+
+  function updateUI(){
+    const heroBottom = hero.getBoundingClientRect().bottom;
+    const afterHero = heroBottom <= 0;
+    sticky.classList.toggle('is-on', afterHero);
+
+    const showBackTop = afterHero && !footerVisible;
+    backTop.classList.toggle('is-on', showBackTop);
+  }
+
+  window.addEventListener('scroll', updateUI, {passive:true});
+  updateUI();
+
+  const io = new IntersectionObserver((entries)=>{
+    for (const ent of entries){
+      footerVisible = ent.isIntersecting;
+      updateUI();
+    }
+  }, { threshold: 0.01 });
+  io.observe(footer);
+
+  backTop.addEventListener('click', (e)=>{
+    e.preventDefault();
+    window.scrollTo({top:0, behavior:'smooth'});
+  });
+
+  const btn = document.querySelector('.scroll-up');
+  if(btn){
+    btn.addEventListener('click', ()=> window.scrollTo({top:0, behavior:'smooth'}));
+  }
+
+  // ===== Init =====
+  function escapeHtml(s){ return String(s).replace(/[&<>"']/g, m=>({ "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;" }[m])); }
+  function formatBytes(bytes){
+    if(bytes===0) return "0 B";
+    const k=1024, sizes=["B","KB","MB","GB"];
+    const i=Math.floor(Math.log(bytes)/Math.log(k));
+    return (bytes/Math.pow(k,i)).toFixed(i?1:0)+" "+sizes[i];
+  }
+
+  renderSteps();
+  renderTask();
+  renderProgress();
+
+})();
+</script>
+
+</body>
+</html>

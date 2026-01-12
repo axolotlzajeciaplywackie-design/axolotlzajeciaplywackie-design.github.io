@@ -1,0 +1,433 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>CMS – Energy Internship – Completion</title>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+
+<style>
+/* ================= STYLE BAZOWE ================= */
+:root{
+  --cms-teal:#3a6f78;
+  --cms-orange:#f37b20;
+  --cms-deep:#0d535f;
+  --text:#101315;
+  --font: system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
+  --container:1440px;
+  --brand-orange: #e66a1a;
+  --text-white: #ffffff;
+  --bg-gray: #f2f4f6;
+}
+
+*{box-sizing:border-box}
+html,body{margin:0; padding:0; height: 100%;}
+
+/* UKŁAD FLEXBOX - TO NAPRAWIA STOPKĘ */
+body{
+    font-family:var(--font); 
+    color:var(--text); 
+    background-color:var(--bg-gray);
+    display:flex; 
+    flex-direction:column; 
+    min-height:100vh;
+}
+a{color:inherit; text-decoration:none}
+button{font-family:inherit; cursor:pointer;}
+img{max-width:100%; display:block}
+
+/* ================= HERO ================= */
+.stage{
+  position:relative;
+  height:380px; 
+  flex-shrink: 0; 
+  overflow:hidden;
+  background:#000;
+}
+.stage img.bg{
+  position:absolute; inset:0;
+  width:100%; height:100%;
+  object-fit:cover;
+  object-position: center;
+  z-index: 0;
+}
+.stage::after{
+  content:"";
+  position:absolute; inset:0;
+  z-index: 1;
+  background:linear-gradient(180deg, rgba(0,0,0,.3) 0%, rgba(0,0,0,.6) 100%);
+}
+
+.hero-header{ position:absolute; top:0; left:0; right:0; z-index:10; color:#fff; }
+.hero-header .inner{ max-width:var(--container); margin:0 auto; padding:14px 32px; }
+.header-row{ display:flex; align-items:center; justify-content:space-between; }
+.header-left{ display:flex; align-items:center; gap:18px; }
+.logo img{ height:44px; width:auto; display:block; }
+.header-right{ display:flex; align-items:center; gap:18px; font-size:14px; }
+.lang{ display:flex; align-items:center; gap:8px; }
+
+.stage-inner{
+  position:relative; z-index:2; height:100%;
+  display:flex; flex-direction:column; justify-content:center; align-items:center;
+  color:#fff; text-align:center; padding-top:20px;
+}
+.stage h1{ margin:0; font-weight:300; font-size:52px; text-shadow: 0 2px 10px rgba(0,0,0,.5); }
+.stage p{ margin:10px 0 0; font-size:18px; font-weight:300; opacity:0.9; }
+
+/* ================= TREŚĆ GŁÓWNA ================= */
+.wrap{
+  width: 100%;
+  max-width: 800px; 
+  margin: 50px auto 80px; 
+  padding: 0 20px;
+  flex: 1 0 auto; /* WYPYCHANIE STOPKI */
+}
+
+.card{
+  background:#fff;
+  border-radius:12px;
+  border:1px solid #e2e8f0;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+  overflow:hidden;
+  text-align: center;
+  padding: 60px 40px;
+}
+
+.success-icon{
+  width:70px; height:70px;
+  background:var(--cms-teal);
+  border-radius:50%;
+  margin:0 auto 25px;
+  display:flex; align-items:center; justify-content:center;
+}
+.success-icon svg{ width:36px; height:36px; stroke:#fff; stroke-width:3; fill:none; stroke-linecap:round; stroke-linejoin:round; }
+
+.h-finish{ font-size:28px; font-weight:600; color:#0f172a; margin:0 0 16px; }
+.p-finish{ font-size:16px; line-height:1.6; color:#475569; max-width:640px; margin:0 auto 40px; }
+
+/* --- NAPRAWIONY SZARY PROSTOKĄT (PADDING) --- */
+.cert-section{
+  background:#f8fafc;
+  border-top:1px solid #e2e8f0;
+  margin-top: 30px;
+  padding-top: 40px;
+  padding-bottom: 60px; /* DUŻO MIEJSCA NA DOLE */
+  border-radius: 8px;
+}
+
+.btn-download{
+  background:var(--cms-orange);
+  color:#fff;
+  border:none;
+  padding:14px 32px;
+  border-radius:50px;
+  font-size:14px;
+  font-weight:700;
+  text-transform:uppercase;
+  letter-spacing:0.5px;
+  transition: background 0.2s;
+  cursor: pointer;
+  box-shadow: 0 4px 15px rgba(243, 123, 32, 0.3);
+}
+.btn-download:hover{ background:#d66515; }
+
+/* Profil */
+.user-profile { display: flex; align-items: center; gap: 10px; border-left: 1px solid rgba(255,255,255,0.3); padding-left: 18px; margin-left: 10px; cursor: pointer; }
+.user-avatar { width: 32px; height: 32px; background-color: var(--brand-orange); color: white; border-radius: 50%; display: flex; justify-content: center; align-items: center; font-weight: 700; font-size: 13px; text-transform: uppercase; }
+.user-info { font-size: 14px; font-weight: 500; color: white; }
+
+/* ================= STOPKA ================= */
+.cms-footer{ 
+  margin-top: auto; /* Dopychanie do dołu */
+  flex-shrink: 0; 
+  background-color: #115e6e; 
+  background-image: radial-gradient(ellipse 180% 130% at 50% -30%, #022228 10%, #06313a 40%, transparent 85%); 
+  color: var(--text-white); 
+  padding: 0; 
+  width: 100%; 
+}
+.footer-centered-wrap { max-width: var(--container); margin: 0 auto; padding: 60px 40px 30px; min-height: 650px; display: flex; flex-direction: column; justify-content: space-between; }
+.breadcrumbs { font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 80px; display: flex; align-items: center; gap: 10px; opacity: 0.8; }
+.breadcrumbs .sep { font-size: 10px; }
+.main-content { display: flex; align-items: stretch; flex-grow: 1; }
+.left-col { flex: 0 0 50%; max-width: 50%; padding-right: 60px; }
+.middle-line { width: 1px; background-color: var(--divider-color); opacity: 0.5; flex-shrink: 0; }
+.right-col { flex: 0 0 50%; max-width: 50%; padding-left: 100px; }
+.logo-c { margin-bottom: 50px; } .logo-c img{ width:90px; height:90px; display:block; }
+.left-col h2 { font-size: 56px; font-weight: 350; margin: 0 0 30px 0; letter-spacing: -1px; }
+.left-col p { font-size: 20px; line-height: 1.5; margin-bottom: 50px; font-weight: 300; opacity: 0.9; }
+.btn-orange { background-color: var(--brand-orange); color: white; padding: 18px 38px; border-radius: 40px; text-decoration: none; font-weight: 700; font-size: 14px; display: inline-flex; align-items: center; text-transform: uppercase; letter-spacing: 1px; }
+.btn-orange:after { content: "→"; margin-left: 12px; font-size: 20px; font-weight: 300; }
+.social { margin-top: 80px; display: flex; gap: 30px; font-size: 16px; font-weight: 400; } .social a { color: white; text-decoration: none; }
+.footer-nav { list-style: none; padding: 0; margin: 0; } .footer-nav li { margin-bottom: 15px; } .footer-nav a { color: white; text-decoration: none; font-size: 44px; font-weight: 300; line-height: 1.1; display: block; }
+.bottom-bar { margin-top: 60px; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 30px; display: flex; justify-content: space-between; align-items: center; font-size: 12px; letter-spacing: 1px; font-weight: 600; gap:20px; flex-wrap:wrap; }
+.bottom-left-group { display: flex; align-items: center; gap: 40px; }
+.a11y-icon { width: 36px; height: 36px; border: 2px solid white; border-radius: 50%; display: flex; justify-content: center; align-items: center; }
+.legal-links { display: flex; gap: 20px; text-transform: uppercase; flex-wrap:wrap; } .legal-links a { color: white; text-decoration: none; opacity: 0.8; }
+.scroll-up { background-color: var(--brand-orange); width: 48px; height: 48px; border-radius: 50%; display: flex; justify-content: center; align-items: center; cursor: pointer; border: none; }
+.back-top{ position:fixed; right:28px; bottom:28px; width:52px; height:52px; border-radius:999px; background:var(--cms-orange); display:flex; align-items:center; justify-content:center; z-index:1100; opacity:0; pointer-events:none; transform:translateY(10px); transition:opacity .18s ease, transform .18s ease; }
+.back-top.is-on{ opacity:1; pointer-events:auto; transform:translateY(0); }
+.back-top svg{ width:22px; height:22px; fill:none; stroke:#fff; stroke-width:3; stroke-linecap:round; stroke-linejoin:round; }
+
+@media (max-width:980px){
+  .cms-footer{ padding:44px 22px 22px; min-height:auto; margin-top:40px; }
+  .main-content{ flex-direction:column; gap:34px; }
+  .left-col { flex: auto; max-width: 100%; padding-right: 0; }
+  .right-col { flex: auto; max-width: 100%; padding-left: 0; }
+  .middle-line{ display:none; }
+  .footer-nav a{ font-size:34px; }
+}
+</style>
+</head>
+
+<body>
+
+<section class="stage">
+  <img class="bg" alt="" src="photocms_success.jpg">
+
+  <header class="hero-header">
+    <div class="inner">
+      <div class="header-row">
+        <div class="header-left">
+          <a class="logo" href="#">
+            <img src="cms%20logo.png" alt="CMS Logo">
+          </a>
+        </div>
+        <div class="header-right">
+          <div class="user-profile" onclick="location.href='account.html'">
+             <div class="user-avatar" id="avatarHero">?</div>
+             <span class="user-info" id="nameHero">Account</span>
+          </div>
+          <div class="lang"><span>Poland | EN</span></div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <div class="stage-inner">
+    <h1>Congratulations!</h1>
+    <p>You have successfully completed the Energy Virtual Internship.</p>
+  </div>
+</section>
+
+<main class="wrap">
+  <div class="card">
+    <div class="success-icon">
+      <svg viewBox="0 0 24 24"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
+    </div>
+
+    <h2 class="h-finish">Programme Completed</h2>
+    
+    <p class="p-finish">
+      <b>Thank you. We have received your answers.</b><br><br>
+      We hope this experience gave you valuable insight into the life of an Energy lawyer at CMS. Your dedication throughout these tasks has been impressive.
+    </p>
+
+    <div class="cert-section">
+      <h3 style="margin:0 0 10px; color:#0f172a; font-size:18px;">Your Official Certificate</h3>
+      <p style="margin:0 0 25px; color:#64748b; font-size:14px;">
+        Download your personalized document verifying your completion.
+      </p>
+      <button class="btn-download" id="genCertBtn">Generate Certificate PDF</button>
+    </div>
+
+    <div style="margin-top: 40px;">
+        <a href="index.html" style="color:#64748b; font-size:14px; text-decoration:underline;">Back to Home</a>
+    </div>
+
+  </div>
+</main>
+
+<footer class="cms-footer" id="footer">
+  <div class="footer-centered-wrap">
+    <div class="breadcrumbs">
+      HOME <span class="sep">&gt;</span> CAREERS <span class="sep">&gt;</span> COMPLETED
+    </div>
+    <div class="main-content">
+      <div class="left-col">
+        <div class="logo-c">
+          <img src="cms%20C%20logo.png" alt="CMS C logo">
+        </div>
+        <h2>Stay informed</h2>
+        <p>For the very latest legal updates, commentary, and analysis from CMS delivered directly to your inbox, sign up to the Law-Now subscription service now.</p>
+        <a href="javascript:void(0)" class="btn-orange">SIGN UP NOW</a>
+        <div class="social"><a href="javascript:void(0)">LinkedIn</a><a href="javascript:void(0)">X</a></div>
+      </div>
+      <div class="middle-line"></div>
+      <div class="right-col">
+        <ul class="footer-nav">
+          <li><a href="index.html">Home</a></li>
+          <li><a href="javascript:void(0)">Expertise</a></li>
+          <li><a href="javascript:void(0)">People</a></li>
+          <li><a href="javascript:void(0)">Offices</a></li>
+          <li><a href="javascript:void(0)">Insights</a></li>
+          <li><a href="javascript:void(0)">Innovation</a></li>
+          <li><a href="javascript:void(0)">About us</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="bottom-bar">
+      <div class="bottom-left-group">
+        <div class="a11y-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="white" aria-hidden="true"><path d="M12 2c1.1 0 2 .9 2 2s-.9 2-2 2-2-.9-2-2 .9-2 2-2zm9 7h-6v13h-2v-6h-2v6H9V9H3V7h18v2z"/></svg></div>
+        <div>© CMS LEGAL 2026</div>
+      </div>
+      <div class="legal-links">
+        <a href="javascript:void(0)">Legal Information</a><a href="javascript:void(0)">Privacy Notice</a><a href="javascript:void(0)">Cookie Notice</a><a href="javascript:void(0)">Terms of Use</a><a href="javascript:void(0)">Accessibility</a><a href="javascript:void(0)">Contact</a><a href="javascript:void(0)">Sitemap</a>
+      </div>
+      <button class="scroll-up" onclick="window.scrollTo({top:0, behavior:'smooth'})"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3" aria-hidden="true"><path d="M18 15l-6-6-6 6"/></svg></button>
+    </div>
+  </div>
+</footer>
+
+<a class="back-top" id="backTop" href="javascript:void(0)">
+  <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M18 15l-6-6-6 6"></path></svg>
+</a>
+
+<script>
+(function(){
+  // 1. DANE
+  const PROFILE_KEY = "cms_user_profile_v1";
+  let user = { firstName: "Participant", lastName: "" };
+  try {
+    const stored = localStorage.getItem(PROFILE_KEY);
+    if(stored) { const u = JSON.parse(stored); if(u.firstName) user = u; }
+  } catch(e) {}
+  const fullName = `${user.firstName} ${user.lastName}`.trim();
+
+  // Avatar
+  const initials = (user.firstName[0] || "") + (user.lastName[0] || "");
+  const av = document.getElementById('avatarHero');
+  const nm = document.getElementById('nameHero');
+  if(av) av.textContent = initials || "?";
+  if(nm) nm.textContent = user.firstName || "Account";
+
+  // 2. GENEROWANIE PDF - LOGIKA PANCERNA
+  document.getElementById('genCertBtn').addEventListener('click', function() {
+    const btn = this;
+    const originalText = btn.textContent;
+    btn.textContent = "Generating...";
+    
+    if(!window.jspdf) {
+      alert("Library not loaded.");
+      btn.textContent = originalText;
+      return;
+    }
+
+    // Funkcja budująca PDF.
+    // Jeśli obrazek się załadował - używamy go.
+    // Jeśli nie - try/catch zadba o to, by PDF i tak powstał (z samym tekstem).
+    function buildPDF(logoImg) {
+        try {
+            const { jsPDF } = window.jspdf;
+            const doc = new jsPDF({ orientation: "landscape", unit: "mm", format: "a4" });
+            const width = doc.internal.pageSize.getWidth();
+            const height = doc.internal.pageSize.getHeight();
+
+            // Tło
+            doc.setFillColor(255, 255, 255);
+            doc.rect(0, 0, width, height, "F");
+            
+            // Ramka
+            doc.setDrawColor(58, 111, 120);
+            doc.setLineWidth(1.5);
+            doc.rect(10, 10, width - 20, height - 20);
+
+            // LOGO (W bloku try-catch na wypadek błędu Tainted Canvas)
+            if (logoImg) {
+                try {
+                    const logoH = 40; 
+                    const ratio = logoImg.width / logoImg.height;
+                    const logoW = logoH * ratio;
+                    doc.addImage(logoImg, 'PNG', (width/2) - (logoW/2), 30, logoW, logoH);
+                } catch(imgErr) {
+                    console.warn("Image load failed inside PDF (CORS). Using text fallback.");
+                    doc.setFont("times", "bold");
+                    doc.setFontSize(36);
+                    doc.setTextColor(58, 111, 120);
+                    doc.text("CMS", width / 2, 50, { align: "center" });
+                }
+            } else {
+                // Fallback tekstowy, gdy obrazek się w ogóle nie wczytał
+                doc.setFont("times", "bold");
+                doc.setFontSize(36);
+                doc.setTextColor(58, 111, 120);
+                doc.text("CMS", width / 2, 50, { align: "center" });
+            }
+
+            // --- TEKSTY ---
+            doc.setFont("times", "italic");
+            doc.setFontSize(28);
+            doc.setTextColor(0);
+            doc.text("Certificate of Completion", width / 2, 85, { align: "center" });
+
+            doc.setFont("helvetica", "normal");
+            doc.setFontSize(12);
+            doc.setTextColor(80);
+            doc.text("This is to certify that", width / 2, 100, { align: "center" });
+
+            // IMIĘ I NAZWISKO
+            doc.setFont("helvetica", "bold");
+            doc.setFontSize(36);
+            doc.setTextColor(243, 123, 32); 
+            doc.text(fullName, width / 2, 120, { align: "center" });
+            
+            doc.setDrawColor(200);
+            doc.setLineWidth(0.5);
+            doc.line(width/2 - 60, 125, width/2 + 60, 125);
+
+            doc.setFont("helvetica", "normal");
+            doc.setFontSize(14);
+            doc.setTextColor(60);
+            doc.text("has successfully completed the", width / 2, 140, { align: "center" });
+            
+            doc.setFont("helvetica", "bold");
+            doc.setFontSize(16);
+            doc.setTextColor(0);
+            doc.text("Energy Virtual Internship Experience", width / 2, 150, { align: "center" });
+
+            // DATA
+            const today = new Date().toLocaleDateString("en-GB", { day: 'numeric', month: 'long', year: 'numeric' });
+            doc.setFontSize(11);
+            doc.setFont("helvetica", "normal");
+            doc.setTextColor(0);
+            doc.text(`Date: ${today}`, 40, 175);
+            
+            // PODPIS
+            doc.setFont("helvetica", "bold");
+            doc.text("Partner", width - 40, 165, { align: "right" });
+            
+            doc.setFontSize(14);
+            doc.text("Marcin Bejm", width - 40, 171, { align: "right" });
+            
+            doc.setFontSize(10);
+            doc.setFont("helvetica", "normal");
+            doc.setTextColor(80);
+            doc.text("Head of Energy and Infrastructure Practice (demo)", width - 40, 177, { align: "right" });
+
+            doc.save(`CMS_Certificate_${user.lastName || "Intern"}.pdf`);
+            
+            btn.textContent = "Downloaded ✓";
+            setTimeout(() => btn.textContent = originalText, 3000);
+
+        } catch (e) {
+            console.error(e);
+            alert("Error. Please ensure file is not blocked.");
+            btn.textContent = originalText;
+        }
+    }
+
+    // Ładowanie obrazka
+    const img = new Image();
+    img.src = 'logocertyfikatu.png';
+    
+    img.onload = function() { buildPDF(this); };
+    img.onerror = function() { buildPDF(null); }; // Jeśli brak pliku, rób PDF bez logo
+
+  });
+
+})();
+</script>
+
+</body>
+</html>

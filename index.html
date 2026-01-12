@@ -1,0 +1,837 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>CMS – Job opportunities</title>
+
+<style>
+:root{
+  --cms-teal:#3a6f78;
+  --cms-orange:#f37b20;
+  --cms-deep:#0d535f;
+  --text:#101315;
+  --font: system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
+
+  --container:1440px;
+  --content:1280px;
+
+  --brand-orange: #e66a1a;
+  --text-white: #ffffff;
+  --divider-color: rgba(255, 255, 255, 0.15);
+}
+
+*{box-sizing:border-box}
+html,body{margin:0}
+body{font-family:var(--font); color:var(--text); background:#fff}
+a{color:inherit; text-decoration:none}
+
+.stage{
+  position:relative;
+  height:460px;
+  overflow:hidden;
+  background:#000;
+}
+.stage img.bg{
+  position:absolute; inset:0;
+  width:100%; height:100%;
+  object-fit:cover;
+  transform:scale(1.04);
+}
+.stage::after{
+  content:"";
+  position:absolute; inset:0;
+  background:linear-gradient(180deg,
+    rgba(0,0,0,.38) 0%,
+    rgba(0,0,0,.50) 55%,
+    rgba(0,0,0,.66) 100%
+  );
+}
+
+.hero-header{
+  position:absolute;
+  top:0; left:0; right:0;
+  z-index:10;
+  color:#fff;
+}
+.hero-header .inner{
+  max-width:var(--container);
+  margin:0 auto;
+  padding:14px 32px 10px;
+}
+.header-row{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:18px;
+}
+.header-left{
+  display:flex;
+  align-items:center;
+  gap:18px;
+  min-width:auto;
+}
+.header-center{
+  flex:1;
+  display:flex;
+  justify-content:flex-start;
+  align-items:center;
+  padding-left:0;
+  margin-left:14px;
+}
+.header-right{
+  min-width:260px;
+  display:flex;
+  align-items:center;
+  justify-content:flex-end;
+  gap:18px;
+  font-size:14px;
+}
+
+.burger{
+  width:40px;height:40px;
+  display:grid; place-items:center;
+  background:transparent;
+  border:none;
+  padding:0;
+  cursor:pointer;
+}
+.icon{
+  width:18px;height:18px;
+  fill:none;
+  stroke:#fff;
+  stroke-width:2;
+  stroke-linecap:round;
+  stroke-linejoin:round;
+}
+.icon-solid{
+  width:18px;height:18px;
+  fill:#fff;
+}
+.logo{display:flex; align-items:center;}
+.logo img{display:block; height:44px; width:auto;}
+
+.nav-pill{
+  display:flex;
+  align-items:center;
+  gap:26px;
+  padding:14px 26px;
+  border-radius:999px;
+  background:rgba(255,255,255,.24);
+  backdrop-filter:blur(10px);
+  -webkit-backdrop-filter:blur(10px);
+}
+.nav-pill a{
+  color:#fff;
+  font-size:15px;
+  font-weight:520;
+  white-space:nowrap;
+}
+
+.lang{
+  display:flex;
+  align-items:center;
+  gap:8px;
+  color:#fff;
+  white-space:nowrap;
+}
+
+.global-btn{
+  display:inline-flex;
+  align-items:center;
+  gap:8px;
+  margin:28px 0 0 58px;
+  padding:8px 16px;
+  border-radius:999px;
+  background:#fff;
+  color:var(--cms-orange);
+  font-size:12px;
+  font-weight:650;
+  letter-spacing:.02em;
+}
+.global-btn .arrow{
+  width:10px;height:10px;
+  stroke:var(--cms-orange);
+  stroke-width:2.2;
+  fill:none;
+  stroke-linecap:round;
+  stroke-linejoin:round;
+}
+
+.stage-inner{
+  position:relative;
+  z-index:2;
+  height:100%;
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+  align-items:center;
+  color:#fff;
+  text-align:center;
+  padding-top:36px;
+}
+.stage h1{
+  margin:0;
+  font-weight:200;
+  font-size:64px;
+  letter-spacing:.2px;
+  color:#fff;
+  text-shadow: 0 2px 14px rgba(0,0,0,.55);
+}
+.stage p{
+  margin:14px 0 0;
+  font-size:16px;
+  color:#fff;
+  text-shadow: 0 2px 10px rgba(0,0,0,.45);
+}
+
+.sticky-header{
+  position:fixed;
+  top:0; left:0; right:0;
+  z-index:1000;
+  background:var(--cms-teal);
+  transform:translateY(-110%);
+  transition:transform .18s ease;
+}
+.sticky-header.is-on{ transform:translateY(0); }
+.sticky-header .inner{
+  max-width:var(--container);
+  margin:0 auto;
+  padding:12px 32px;
+  color:#fff;
+}
+.sticky-header .header-center{ display:none; }
+.sticky-header .global-btn{ display:none; }
+
+.container{
+  max-width:var(--content);
+  margin:0 auto;
+  padding:0 24px;
+}
+
+.section{ padding:58px 0 60px; }
+
+.lead{
+  max-width:900px;
+  margin:0 auto;
+  text-align:center;
+  font-size:16px;
+  line-height:1.55;
+  color:#1f2937;
+  font-weight:450;
+}
+
+.tiles{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:28px;
+  margin-top:34px;
+  margin-bottom:30px;
+}
+.tile{
+  border-radius:22px;
+  min-height:190px;
+  display:flex;
+  align-items:flex-end;
+  padding:24px;
+  color:#fff;
+  position:relative;
+}
+.tile .badge{
+  position:absolute;
+  top:18px; left:18px;
+  font-size:12px;
+  letter-spacing:.08em;
+  text-transform:uppercase;
+  opacity:.9;
+}
+.tile .title{
+  font-size:32px;
+  font-weight:300;
+  letter-spacing:.2px;
+}
+.tile.vacancies{ background:#0b6a78; }
+.tile.internships{ background:#0d535f; }
+
+.tile-actions{
+  margin-top:18px;
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:28px;
+  align-items:start;
+}
+.tile-actions .col{
+  display:flex;
+  justify-content:center;
+}
+.btn{
+  display:inline-flex;
+  align-items:center;
+  gap:10px;
+  padding:11px 18px;
+  border-radius:999px;
+  font-size:13px;
+  border:1px solid transparent;
+  font-weight:650;
+  letter-spacing:.02em;
+}
+.btn-teal{ background:#0b6a78; color:#fff; }
+.btn-outline-orange{ background:transparent; color:var(--cms-orange); border-color:var(--cms-orange); }
+
+.split{
+  display:grid;
+  grid-template-columns:1.2fr .8fr;
+  gap:96px;
+  margin-top:130px;
+  align-items:start;
+}
+.bigline{
+  margin:0;
+  font-weight:300;
+  font-size:72px;
+  line-height:1.05;
+  letter-spacing:.2px;
+}
+.bigline .l1{ display:block; }
+.bigline .l2{ display:block; }
+
+.kpi-top{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  font-size:12px;
+  letter-spacing:.08em;
+  text-transform:uppercase;
+  color:rgba(0,0,0,.62);
+  margin-bottom:12px;
+  font-weight:400;
+}
+.kpi{ border-top:1px solid rgba(0,0,0,.14); }
+.kpi-row{
+  display:flex;
+  gap:18px;
+  align-items:baseline;
+  padding:18px 0;
+  border-bottom:1px solid rgba(0,0,0,.14);
+}
+.kpi-num{ font-weight:300; font-size:64px; letter-spacing:.4px; }
+.kpi-label{ font-weight:300; font-size:44px; color:rgba(0,0,0,.42); }
+
+.back-top{
+  position:fixed;
+  right:28px;
+  bottom:28px;
+  width:52px;
+  height:52px;
+  border-radius:999px;
+  background:var(--cms-orange);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  z-index:1100;
+  opacity:0;
+  pointer-events:none;
+  transform:translateY(10px);
+  transition:opacity .18s ease, transform .18s ease;
+}
+.back-top.is-on{
+  opacity:1;
+  pointer-events:auto;
+  transform:translateY(0);
+}
+.back-top svg{
+  width:22px;
+  height:22px;
+  fill:none;
+  stroke:#fff;
+  stroke-width:3;
+  stroke-linecap:round;
+  stroke-linejoin:round;
+}
+
+.cms-footer{
+  margin-top:70px;
+  background-color: #115e6e;
+  background-image: radial-gradient(
+    ellipse 180% 130% at 50% -30%,
+    #022228 10%,
+    #06313a 40%,
+    transparent 85%
+  );
+  color: var(--text-white);
+  padding: 0;
+  width: 100%;
+}
+
+.footer-centered-wrap {
+  max-width: var(--container);
+  margin: 0 auto;
+  padding: 60px 40px 30px;
+  min-height: 650px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.breadcrumbs {
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin-bottom: 80px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  opacity: 0.8;
+}
+.breadcrumbs .sep { font-size: 10px; }
+
+.main-content {
+  display: flex;
+  align-items: stretch;
+  flex-grow: 1;
+}
+
+.left-col {
+  flex: 0 0 50%;
+  max-width: 50%;
+  padding-right: 60px;
+}
+
+.middle-line {
+  width: 1px;
+  background-color: var(--divider-color);
+  opacity: 0.5;
+  flex-shrink: 0;
+}
+
+.right-col {
+  flex: 0 0 50%;
+  max-width: 50%;
+  padding-left: 100px;
+}
+
+.logo-c { margin-bottom: 50px; }
+.logo-c img{ width:90px; height:90px; display:block; }
+
+.left-col h2 {
+  font-size: 56px;
+  font-weight: 350;
+  margin: 0 0 30px 0;
+  letter-spacing: -1px;
+}
+.left-col p {
+  font-size: 20px;
+  line-height: 1.5;
+  margin-bottom: 50px;
+  font-weight: 300;
+  opacity: 0.9;
+}
+.btn-orange {
+  background-color: var(--brand-orange);
+  color: white;
+  padding: 18px 38px;
+  border-radius: 40px;
+  text-decoration: none;
+  font-weight: 700;
+  font-size: 14px;
+  display: inline-flex;
+  align-items: center;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+.btn-orange:after {
+  content: "→";
+  margin-left: 12px;
+  font-size: 20px;
+  font-weight: 300;
+}
+.social {
+  margin-top: 80px;
+  display: flex;
+  gap: 30px;
+  font-size: 16px;
+  font-weight: 400;
+}
+.social a { color: white; text-decoration: none; }
+
+.footer-nav { list-style: none; padding: 0; margin: 0; }
+.footer-nav li { margin-bottom: 15px; }
+.footer-nav a {
+  color: white;
+  text-decoration: none;
+  font-size: 44px;
+  font-weight: 300;
+  line-height: 1.1;
+  display: block;
+}
+
+.bottom-bar {
+  margin-top: 60px;
+  border-top: 1px solid rgba(255,255,255,0.1);
+  padding-top: 30px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 12px;
+  letter-spacing: 1px;
+  font-weight: 600;
+  gap:20px;
+  flex-wrap:wrap;
+}
+.bottom-left-group {
+  display: flex;
+  align-items: center;
+  gap: 40px;
+}
+.a11y-icon {
+  width: 36px;
+  height: 36px;
+  border: 2px solid white;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.legal-links {
+  display: flex;
+  gap: 20px;
+  text-transform: uppercase;
+  flex-wrap:wrap;
+}
+.legal-links a { color: white; text-decoration: none; opacity: 0.8; }
+
+.scroll-up {
+  background-color: var(--brand-orange);
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  border: none;
+}
+
+@media (max-width:980px){
+  .header-center{ display:none; }
+  .header-right{ min-width:auto; }
+  .global-btn{ margin-left:0; }
+
+  .tiles{ grid-template-columns:1fr; }
+  .tile-actions{ grid-template-columns:1fr; gap:14px; }
+  .split{ grid-template-columns:1fr; gap:48px; }
+  .bigline{ font-size:48px; }
+
+  .section{ padding:80px 0 70px; }
+
+  .cms-footer { margin-top:40px; }
+  .footer-centered-wrap { padding: 40px 24px 24px; min-height:auto; }
+  .main-content{ flex-direction:column; gap:34px; }
+  .left-col { flex: auto; max-width: 100%; padding-right: 0; }
+  .right-col { flex: auto; max-width: 100%; padding-left: 0; }
+  .middle-line{ display:none; }
+  .footer-nav a{ font-size:34px; }
+}
+</style>
+</head>
+
+<body>
+
+<section class="stage" id="hero">
+  <img class="bg" alt="" src="https://cms.law/var/dpcontent/storage/images/_aliases/jpegoptim_max_90/media/local/cms-cmck/images/careers/job-opportunities-poland-840x420/5086613-1-eng-GB/Job-Opportunities-Poland-840x420.jpg">
+
+  <header class="hero-header" aria-label="Header on hero">
+    <div class="inner">
+      <div class="header-row">
+        <div class="header-left">
+          <button class="burger" aria-label="Menu">
+            <svg class="icon" viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M4 6h16M4 12h16M4 18h16"></path>
+            </svg>
+          </button>
+
+          <a class="logo" href="#" aria-label="CMS home">
+            <img src="cms%20logo.png" alt="CMS law·tax·future">
+          </a>
+        </div>
+
+        <div class="header-center" aria-label="Primary navigation">
+          <nav class="nav-pill">
+            <a href="#">Expertise ▾</a>
+            <a href="#">People</a>
+            <a href="#">Offices ▾</a>
+            <a href="#">Innovation</a>
+            <a href="#">Insights ▾</a>
+            <a href="#">About CMS ▾</a>
+          </nav>
+        </div>
+
+        <div class="header-right">
+          <div class="lang">
+            <svg class="icon-solid" viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M12 22s7-6.2 7-13a7 7 0 0 0-14 0c0 6.8 7 13 7 13z"></path>
+              <circle cx="12" cy="9" r="2.6" fill="#0d535f"></circle>
+            </svg>
+            <span>Poland | EN</span>
+          </div>
+
+          <button class="burger" aria-label="Search">
+            <svg class="icon" viewBox="0 0 24 24" aria-hidden="true">
+              <circle cx="11" cy="11" r="6.5"></circle>
+              <path d="M16.2 16.2L21 21"></path>
+            </svg>
+          </button>
+        </div>
+      </div>
+
+      <a class="global-btn" href="#" aria-label="Go to global job opportunities">
+        <svg class="arrow" viewBox="0 0 12 12" aria-hidden="true">
+          <path d="M7.5 2.5L3.5 6l4 3.5"></path>
+        </svg>
+        GO TO GLOBAL JOB OPPORTUNITIES
+      </a>
+    </div>
+  </header>
+
+  <div class="stage-inner">
+    <h1>Job opportunities</h1>
+    <p>Poland</p>
+  </div>
+</section>
+
+<header class="sticky-header" id="sticky" aria-label="Sticky header">
+  <div class="inner">
+    <div class="header-row">
+      <div class="header-left">
+        <button class="burger" aria-label="Menu">
+          <svg class="icon" viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M4 6h16M4 12h16M4 18h16"></path>
+          </svg>
+        </button>
+
+        <a class="logo" href="#" aria-label="CMS home">
+          <img src="cms%20logo.png" alt="CMS law·tax·future">
+        </a>
+      </div>
+
+      <div class="header-right">
+        <div class="lang">
+          <svg class="icon-solid" viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M12 22s7-6.2 7-13a7 7 0 0 0-14 0c0 6.8 7 13 7 13z"></path>
+            <circle cx="12" cy="9" r="2.6" fill="#0d535f"></circle>
+          </svg>
+          <span>Poland | EN</span>
+        </div>
+
+        <button class="burger" aria-label="Search">
+          <svg class="icon" viewBox="0 0 24 24" aria-hidden="true">
+            <circle cx="11" cy="11" r="6.5"></circle>
+            <path d="M16.2 16.2L21 21"></path>
+          </svg>
+        </button>
+      </div>
+    </div>
+  </div>
+</header>
+
+<main>
+  <section class="section">
+    <div class="container">
+      <p class="lead">
+        Please see the link below to explore our current vacancies. If you can’t find a role that matches your experience,
+        you can still submit your details, and we’ll get in touch if a relevant role comes up in the future.
+        Use the same link below, and then click on ‘Introduce Yourself’.
+      </p>
+
+      <div class="tiles">
+        <a class="tile vacancies" href="#" aria-label="Current Vacancies">
+          <div class="badge">Careers</div>
+          <div class="title">Current Vacancies</div>
+        </a>
+
+        <a class="tile internships" href="Stronastażowa.html" aria-label="Virtual internships">
+          <div class="badge">Early careers</div>
+          <div class="title">Virtual internships</div>
+        </a>
+      </div>
+
+      <div class="tile-actions" aria-label="Tile actions">
+        <div class="col">
+          <a class="btn btn-outline-orange" href="#">INTRODUCE YOURSELF →</a>
+        </div>
+        <div class="col">
+          <a class="btn btn-teal" href="Stronastażowa.html#simulations">VIEW VIRTUAL INTERNSHIPS →</a>
+        </div>
+      </div>
+
+      <div class="split">
+        <div>
+          <h2 class="bigline">
+            <span class="l1">Local market knowledge.</span>
+            <span class="l2">Global outlook</span>
+          </h2>
+
+          <p style="margin-top:18px; font-size:16px; max-width:520px; line-height:1.55; font-weight:450;">
+            We provide future-facing legal advice to help your organisation thrive. Combining local market knowledge and a
+            global perspective, and with lawyers in locations worldwide, your organisation benefits from the expertise it
+            needs, even across borders.
+          </p>
+
+          <a href="#" style="display:inline-block; margin-top:14px; color:var(--cms-orange); font-size:13px; font-weight:650; letter-spacing:.08em; text-transform:uppercase;">
+            About CMS
+          </a>
+        </div>
+
+        <div>
+          <div class="kpi-top">
+            <span>People across CMS</span>
+            <a class="btn btn-outline-orange" href="#">FIND A LAWYER →</a>
+          </div>
+
+          <div class="kpi">
+            <div class="kpi-row"><div class="kpi-num">7200+</div><div class="kpi-label">Lawyers</div></div>
+            <div class="kpi-row"><div class="kpi-num">1300+</div><div class="kpi-label">Partners</div></div>
+          </div>
+
+          <div class="kpi-top" style="margin-top:18px;">
+            <span>Locations across CMS</span>
+            <a class="btn btn-outline-orange" href="#">FIND AN OFFICE →</a>
+          </div>
+
+          <div class="kpi">
+            <div class="kpi-row"><div class="kpi-num">50+</div><div class="kpi-label">Countries</div></div>
+            <div class="kpi-row"><div class="kpi-num">90+</div><div class="kpi-label">Offices</div></div>
+            <div class="kpi-row"><div class="kpi-num">21</div><div class="kpi-label">Member firms</div></div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+</main>
+
+<footer class="cms-footer" id="footer">
+  <div class="footer-centered-wrap">
+    <div class="breadcrumbs">
+      HOME <span class="sep">&gt;</span> CAREERS
+    </div>
+
+    <div class="main-content">
+      <div class="left-col">
+        <div class="logo-c">
+          <img src="cms%20C%20logo.png" alt="CMS C logo">
+        </div>
+
+        <h2>Stay informed</h2>
+        <p>For the very latest legal updates, commentary, and analysis from CMS delivered directly to your inbox, sign up to the Law-Now subscription service now.</p>
+
+        <a href="#" class="btn-orange">SIGN UP NOW</a>
+
+        <div class="social">
+          <a href="#">LinkedIn</a>
+          <a href="#">X</a>
+        </div>
+      </div>
+
+      <div class="middle-line"></div>
+
+      <div class="right-col">
+        <ul class="footer-nav">
+          <li><a href="#">Home</a></li>
+          <li><a href="#">Expertise</a></li>
+          <li><a href="#">People</a></li>
+          <li><a href="#">Offices</a></li>
+          <li><a href="#">Insights</a></li>
+          <li><a href="#">Innovation</a></li>
+          <li><a href="#">About us</a></li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="bottom-bar">
+      <div class="bottom-left-group">
+        <div class="a11y-icon">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="white" aria-hidden="true">
+            <path d="M12 2c1.1 0 2 .9 2 2s-.9 2-2 2-2-.9-2-2 .9-2 2-2zm9 7h-6v13h-2v-6h-2v6H9V9H3V7h18v2z"/>
+          </svg>
+        </div>
+        <div>© CMS LEGAL 2026</div>
+      </div>
+
+      <div class="legal-links">
+        <a href="#">Legal Information</a>
+        <a href="#">Privacy Notice</a>
+        <a href="#">Cookie Notice</a>
+        <a href="#">Terms of Use</a>
+        <a href="#">Accessibility</a>
+        <a href="#">Contact</a>
+        <a href="#">Sitemap</a>
+      </div>
+
+      <button class="scroll-up" type="button" aria-label="Scroll to top">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3" aria-hidden="true">
+          <path d="M18 15l-6-6-6 6"/>
+        </svg>
+      </button>
+    </div>
+  </div>
+</footer>
+
+<a class="back-top" id="backTop" href="#" aria-label="Back to top">
+  <svg viewBox="0 0 24 24" aria-hidden="true">
+    <path d="M18 15l-6-6-6 6"></path>
+  </svg>
+</a>
+
+<script>
+(function(){
+  // Prevent jump on empty links
+  document.querySelectorAll('a[href="#"]').forEach(anchor => {
+    anchor.addEventListener('click', function(e) {
+      e.preventDefault();
+    });
+  });
+
+  const sticky = document.getElementById('sticky');
+  const hero = document.getElementById('hero');
+  const footer = document.getElementById('footer');
+  const backTop = document.getElementById('backTop');
+
+  let footerVisible = false;
+
+  function updateUI(){
+    const heroBottom = hero.getBoundingClientRect().bottom;
+    const afterHero = heroBottom <= 0;
+
+    sticky.classList.toggle('is-on', afterHero);
+
+    const showBackTop = afterHero && !footerVisible;
+    backTop.classList.toggle('is-on', showBackTop);
+  }
+
+  window.addEventListener('scroll', updateUI, {passive:true});
+  updateUI();
+
+  const io = new IntersectionObserver((entries)=>{
+    for (const ent of entries){
+      footerVisible = ent.isIntersecting;
+      updateUI();
+    }
+  }, { threshold: 0.01 });
+  io.observe(footer);
+
+  backTop.addEventListener('click', (e)=>{
+    e.preventDefault();
+    window.scrollTo({top:0, behavior:'smooth'});
+  });
+
+  const btn = document.querySelector('.scroll-up');
+  if(btn){
+    btn.addEventListener('click', ()=> window.scrollTo({top:0, behavior:'smooth'}));
+  }
+})();
+</script>
+
+</body>
+</html>

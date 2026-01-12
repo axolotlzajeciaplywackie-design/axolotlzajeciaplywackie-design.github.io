@@ -1,0 +1,776 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>CMS – Energy internship – Welcome</title>
+
+<style>
+:root{
+  --cms-teal:#3a6f78;
+  --cms-orange:#f37b20;
+  --cms-deep:#0d535f;
+  --text:#101315;
+  --font: system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
+  --container:1440px;
+  --content:1080px;
+  --brand-orange:#e66a1a;
+  --text-white:#ffffff;
+  --divider-color:rgba(255,255,255,0.15);
+}
+
+*{box-sizing:border-box}
+html,body{margin:0}
+body{font-family:var(--font); color:var(--text); background:#fff}
+a{color:inherit; text-decoration:none}
+button{font-family:inherit}
+img{max-width:100%; display:block}
+
+/* --- IKONKA UŻYTKOWNIKA --- */
+.user-account {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-right: 20px;
+    cursor: pointer;
+}
+.user-avatar {
+    width: 32px;
+    height: 32px;
+    background-color: var(--brand-orange);
+    color: white;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-weight: 700;
+    font-size: 13px;
+    text-transform: uppercase;
+}
+.user-name {
+    font-size: 14px;
+    font-weight: 600;
+    color: white;
+    display: block; 
+}
+@media (max-width: 700px) {
+    .user-name { display: none; }
+}
+
+/* --- HERO / NAGŁÓWEK --- */
+.stage{
+  position:relative;
+  height:420px;
+  overflow:hidden;
+  background:#000;
+}
+.stage img.bg{
+  position:absolute; inset:0;
+  width:100%; height:100%;
+  object-fit:cover;
+  transform:scale(1.04);
+  filter:saturate(1.05) contrast(1.05);
+}
+.stage::after{
+  content:"";
+  position:absolute; inset:0;
+  background:linear-gradient(180deg,
+    rgba(0,0,0,.40) 0%,
+    rgba(0,0,0,.55) 55%,
+    rgba(0,0,0,.72) 100%
+  );
+}
+
+.hero-header{
+  position:absolute;
+  top:0; left:0; right:0;
+  z-index:10;
+  color:#fff;
+}
+.hero-header .inner{
+  max-width:var(--container);
+  margin:0 auto;
+  padding:14px 32px 10px;
+}
+.header-row{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:18px;
+}
+.header-left{ display:flex; align-items:center; gap:18px; }
+.header-right{
+  min-width:260px;
+  display:flex;
+  align-items:center;
+  justify-content:flex-end;
+  gap:18px; font-size:14px;
+}
+.burger{
+  width:40px;height:40px;
+  display:grid; place-items:center;
+  background:transparent;
+  border:none;
+  padding:0;
+  cursor:pointer;
+}
+.icon{
+  width:18px;height:18px;
+  fill:none;
+  stroke:#fff;
+  stroke-width:2;
+  stroke-linecap:round;
+  stroke-linejoin:round;
+}
+.icon-solid{
+  width:18px;height:18px;
+  fill:#fff;
+}
+.logo{display:flex; align-items:center;}
+.logo img{display:block; height:44px; width:auto;}
+.lang{ display:flex; align-items:center; gap:8px; color:#fff; white-space:nowrap; }
+
+.global-btn{
+  display:inline-flex;
+  align-items:center;
+  gap:8px;
+  margin:24px 0 0 58px;
+  padding:8px 16px;
+  border-radius:999px;
+  background:#fff;
+  color:var(--cms-orange);
+  font-size:12px;
+  font-weight:650;
+  letter-spacing:.02em;
+}
+.global-btn .arrow{
+  width:10px;height:10px;
+  stroke:var(--cms-orange);
+  stroke-width:2.2;
+  fill:none;
+  stroke-linecap:round;
+  stroke-linejoin:round;
+}
+
+.stage-inner{
+  position:relative;
+  z-index:2;
+  height:100%;
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+  align-items:center;
+  color:#fff;
+  text-align:center;
+  padding-top:30px;
+}
+.stage h1{
+  margin:0;
+  font-weight:220;
+  font-size:58px;
+  letter-spacing:.2px;
+  text-shadow: 0 2px 14px rgba(0,0,0,.55);
+}
+.stage p{
+  margin:12px 0 0;
+  font-size:15px;
+  opacity:.95;
+  text-shadow: 0 2px 10px rgba(0,0,0,.45);
+}
+
+.sticky-header{
+  position:fixed;
+  top:0; left:0; right:0;
+  z-index:1000;
+  background:var(--cms-teal);
+  transform:translateY(-110%);
+  transition:transform .18s ease;
+}
+.sticky-header.is-on{ transform:translateY(0); }
+.sticky-header .inner{
+  max-width:var(--container);
+  margin:0 auto;
+  padding:12px 32px;
+  color:#fff;
+}
+
+/* --- TREŚĆ GŁÓWNA --- */
+.container{
+  max-width:var(--content);
+  margin:0 auto;
+  padding:54px 18px 0;
+}
+.card{
+  border-radius:20px;
+  border:1px solid rgba(0,0,0,.12);
+  background:#fff;
+  overflow:hidden;
+}
+.card + .card{ margin-top:28px; }
+.card-h{ padding:18px 18px 0; }
+.h{
+  margin:0;
+  font-size:44px;
+  font-weight:260;
+  letter-spacing:-.5px;
+  color:#0f172a;
+}
+.sub{
+  margin:10px 0 0;
+  color:#1f2937;
+  font-weight:450;
+  line-height:1.6;
+  max-width:920px;
+  font-size:16px;
+}
+.hr{ border-top:1px solid rgba(0,0,0,.10); margin:16px 0 0; }
+.card-b{ padding:16px 18px 18px; }
+
+.notice{
+  border-radius:16px;
+  border:1px solid rgba(0,0,0,.12);
+  padding:14px 14px;
+  background:rgba(13,83,95,.04);
+  line-height:1.6;
+  color:#111827;
+  font-weight:450;
+}
+
+.video-wrap{
+  border-radius:18px;
+  overflow:hidden;
+  border:1px solid rgba(0,0,0,.12);
+  background:#000;
+}
+.video{
+  width:100%;
+  height:auto;
+  display:block;
+  background:#000;
+}
+
+.actions{
+  display:flex;
+  justify-content:flex-end;
+  gap:12px;
+  flex-wrap:wrap;
+  margin-top:14px;
+}
+.btn{
+  display:inline-flex;
+  align-items:center;
+  gap:10px;
+  padding:12px 16px;
+  border-radius:999px;
+  font-size:12px;
+  border:1px solid transparent;
+  font-weight:800;
+  letter-spacing:.02em;
+  cursor:pointer;
+}
+.btn-teal{ background:#0b6a78; color:#fff; }
+.btn-outline-orange{ background:transparent; color:var(--cms-orange); border-color:var(--cms-orange); }
+.btn-ghost{ background:rgba(13,83,95,.06); color:#0d535f; border-color:rgba(13,83,95,.18); }
+
+.small{
+  font-size:12px;
+  color:rgba(0,0,0,.62);
+  line-height:1.55;
+}
+
+.back-top{
+  position:fixed;
+  right:28px;
+  bottom:28px;
+  width:52px;
+  height:52px;
+  border-radius:999px;
+  background:var(--cms-orange);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  z-index:1100;
+  opacity:0;
+  pointer-events:none;
+  transform:translateY(10px);
+  transition:opacity .18s ease, transform .18s ease;
+}
+.back-top.is-on{ opacity:1; pointer-events:auto; transform:translateY(0); }
+.back-top svg{
+  width:22px; height:22px;
+  fill:none; stroke:#fff; stroke-width:3;
+  stroke-linecap:round; stroke-linejoin:round;
+}
+
+/* ================= STOPKA ================= */
+.cms-footer{
+  margin-top:70px;
+  background-color: #115e6e;
+  background-image: radial-gradient(
+    ellipse 180% 130% at 50% -30%,
+    #022228 10%,
+    #06313a 40%,
+    transparent 85%
+  );
+  color: var(--text-white);
+  padding: 0;
+  width: 100%;
+}
+
+.footer-centered-wrap {
+  max-width: var(--container);
+  margin: 0 auto;
+  padding: 60px 40px 30px;
+  min-height: 650px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.breadcrumbs {
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin-bottom: 80px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  opacity: 0.8;
+}
+.breadcrumbs .sep { font-size: 10px; }
+
+.main-content {
+  display: flex;
+  align-items: stretch;
+  flex-grow: 1;
+}
+
+.left-col {
+  flex: 0 0 50%;
+  max-width: 50%;
+  padding-right: 60px;
+}
+
+.middle-line {
+  width: 1px;
+  background-color: var(--divider-color);
+  opacity: 0.5;
+  flex-shrink: 0;
+}
+
+.right-col {
+  flex: 0 0 50%;
+  max-width: 50%;
+  padding-left: 100px;
+}
+
+.logo-c { margin-bottom: 50px; }
+.logo-c img{ width:90px; height:90px; display:block; }
+
+.left-col h2 {
+  font-size: 56px;
+  font-weight: 350;
+  margin: 0 0 30px 0;
+  letter-spacing: -1px;
+}
+.left-col p {
+  font-size: 20px;
+  line-height: 1.5;
+  margin-bottom: 50px;
+  font-weight: 300;
+  opacity: 0.9;
+}
+.btn-orange {
+  background-color: var(--brand-orange);
+  color: white;
+  padding: 18px 38px;
+  border-radius: 40px;
+  text-decoration: none;
+  font-weight: 700;
+  font-size: 14px;
+  display: inline-flex;
+  align-items: center;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+.btn-orange:after {
+  content: "→";
+  margin-left: 12px;
+  font-size: 20px;
+  font-weight: 300;
+}
+.social {
+  margin-top: 80px;
+  display: flex;
+  gap: 30px;
+  font-size: 16px;
+  font-weight: 400;
+}
+.social a { color: white; text-decoration: none; }
+
+.footer-nav { list-style: none; padding: 0; margin: 0; }
+.footer-nav li { margin-bottom: 15px; }
+.footer-nav a {
+  color: white;
+  text-decoration: none;
+  font-size: 44px;
+  font-weight: 300;
+  line-height: 1.1;
+  display: block;
+}
+
+.bottom-bar {
+  margin-top: 60px;
+  border-top: 1px solid rgba(255,255,255,0.1);
+  padding-top: 30px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 12px;
+  letter-spacing: 1px;
+  font-weight: 600;
+  gap:20px;
+  flex-wrap:wrap;
+}
+.bottom-left-group {
+  display: flex;
+  align-items: center;
+  gap: 40px;
+}
+.a11y-icon {
+  width: 36px;
+  height: 36px;
+  border: 2px solid white;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.legal-links {
+  display: flex;
+  gap: 20px;
+  text-transform: uppercase;
+  flex-wrap:wrap;
+}
+.legal-links a { color: white; text-decoration: none; opacity: 0.8; }
+
+.scroll-up {
+  background-color: var(--brand-orange);
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  border: none;
+}
+
+/* ================= RWD STOPKI ================= */
+@media (max-width:980px){
+  .header-right{ min-width:auto; }
+  .stage h1{ font-size:44px; }
+  
+  /* Footer Mobile */
+  .cms-footer { margin-top:40px; }
+  .footer-centered-wrap { padding: 40px 24px 24px; min-height:auto; }
+  .main-content{ flex-direction:column; gap:34px; }
+  .left-col { flex: auto; max-width: 100%; padding-right: 0; }
+  .right-col { flex: auto; max-width: 100%; padding-left: 0; }
+  .middle-line{ display:none; }
+  .footer-nav a{ font-size:34px; }
+  
+  .bottom-bar { flex-direction: column; align-items: flex-start; gap: 30px; }
+  .bottom-left-group { flex-wrap: wrap; gap: 20px; }
+  .scroll-up { align-self: flex-end; }
+}
+</style>
+</head>
+
+<body>
+
+<section class="stage" id="hero">
+  <img class="bg" alt="" src="photocms_energy_welcome_hero.jpg">
+
+  <header class="hero-header" aria-label="Header on hero">
+    <div class="inner">
+      <div class="header-row">
+        <div class="header-left">
+          <button class="burger" aria-label="Menu">
+            <svg class="icon" viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M4 6h16M4 12h16M4 18h16"></path>
+            </svg>
+          </button>
+
+          <a class="logo" href="Stronastazowa.html" aria-label="Back to Virtual internships">
+            <img src="cms%20logo.png" alt="CMS law·tax·future">
+          </a>
+        </div>
+
+        <div class="header-right">
+          
+          <div class="user-account" id="userDisplayHero" onclick="location.href='account.html'">
+             <div class="user-avatar" id="avatarHero">?</div>
+             <span class="user-name" id="nameHero">Account</span>
+          </div>
+          
+          <div class="lang">
+            <svg class="icon-solid" viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M12 22s7-6.2 7-13a7 7 0 0 0-14 0c0 6.8 7 13 7 13z"></path>
+              <circle cx="12" cy="9" r="2.6" fill="#0d535f"></circle>
+            </svg>
+            <span>Poland | EN</span>
+          </div>
+
+          <button class="burger" aria-label="Search">
+            <svg class="icon" viewBox="0 0 24 24" aria-hidden="true">
+              <circle cx="11" cy="11" r="6.5"></circle>
+              <path d="M16.2 16.2L21 21"></path>
+            </svg>
+          </button>
+        </div>
+      </div>
+
+      <a class="global-btn" href="javascript:void(0)" aria-label="Go to global job opportunities">
+        <svg class="arrow" viewBox="0 0 12 12" aria-hidden="true">
+          <path d="M7.5 2.5L3.5 6l4 3.5"></path>
+        </svg>
+        GO TO GLOBAL JOB OPPORTUNITIES
+      </a>
+    </div>
+  </header>
+
+  <div class="stage-inner">
+    <h1>Welcome to the Energy internship</h1>
+    <p>Start with a short message from our CEO before you begin Task 1.</p>
+  </div>
+</section>
+
+<header class="sticky-header" id="sticky" aria-label="Sticky header">
+  <div class="inner">
+    <div class="header-row">
+      <div class="header-left" style="display:flex; align-items:center; gap:18px;">
+        <button class="burger" aria-label="Menu">
+          <svg class="icon" viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M4 6h16M4 12h16M4 18h16"></path>
+          </svg>
+        </button>
+        <a class="logo" href="Stronastazowa.html" aria-label="Back">
+          <img src="cms%20logo.png" alt="CMS law·tax·future">
+        </a>
+      </div>
+
+      <div class="header-right">
+        
+        <div class="user-account" id="userDisplaySticky" onclick="location.href='account.html'">
+             <div class="user-avatar" id="avatarSticky">?</div>
+             <span class="user-name" id="nameSticky">Account</span>
+        </div>
+
+        <div class="lang">
+          <svg class="icon-solid" viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M12 22s7-6.2 7-13a7 7 0 0 0-14 0c0 6.8 7 13 7 13z"></path>
+            <circle cx="12" cy="9" r="2.6" fill="#0d535f"></circle>
+          </svg>
+          <span>Poland | EN</span>
+        </div>
+        <button class="burger" aria-label="Search">
+          <svg class="icon" viewBox="0 0 24 24" aria-hidden="true">
+            <circle cx="11" cy="11" r="6.5"></circle>
+            <path d="M16.2 16.2L21 21"></path>
+          </svg>
+        </button>
+      </div>
+    </div>
+  </div>
+</header>
+
+<main class="container">
+  <article class="card">
+    <div class="card-h">
+      <h2 class="h">A quick welcome</h2>
+      <p class="sub">
+        Watch the message below from our <b>CEO Andrzej Pośniak</b>. Then you can start Task 1.
+      </p>
+      <div class="hr"></div>
+    </div>
+
+    <div class="card-b">
+      <div class="notice">
+        Video docelowe może być bardziej indywidualne - skierowane typowo do stażystów. 
+        Tutaj video przykładowe :)
+      </div>
+
+      <div style="margin-top:16px;">
+        <div class="video-wrap" aria-label="CEO welcome video (local file)">
+          <video
+            class="video"
+            controls
+            preload="metadata"
+            playsinline
+            poster="ceo-welcome-poster.jpg"
+          >
+            <source src="ceo-welcome.mp4" type="video/mp4">
+            Your browser doesn’t support video playback. Use the button below to open the post.
+          </video>
+        </div>
+
+        <p class="small" style="margin-top:10px;">
+          If the video doesn’t play, make sure <b>ceo-welcome.mp4</b> is in the same folder as this HTML file.
+        </p>
+
+        <div class="actions">
+          <a class="btn btn-outline-orange"
+             href="https://www.linkedin.com/posts/cms-poland_cmslaw-cmspoland-cms30years-activity-7388519650155814912-j6FE"
+             target="_blank" rel="noreferrer">
+            Open the original post ↗
+          </a>
+
+          <a class="btn btn-teal" href="energy-task-1.html">
+            Start Task 1 →
+          </a>
+        </div>
+      </div>
+    </div>
+  </article>
+</main>
+
+<footer class="cms-footer" id="footer">
+  <div class="footer-centered-wrap">
+    
+    <div class="breadcrumbs">
+      HOME <span class="sep">&gt;</span> CAREERS
+    </div>
+
+    <div class="main-content">
+      <div class="left-col">
+        <div class="logo-c">
+          <img src="cms%20C%20logo.png" alt="CMS C logo">
+        </div>
+
+        <h2>Stay informed</h2>
+        <p>For the very latest legal updates, commentary, and analysis from CMS delivered directly to your inbox, sign up to the Law-Now subscription service now.</p>
+
+        <a href="javascript:void(0)" class="btn-orange">SIGN UP NOW</a>
+
+        <div class="social">
+          <a href="javascript:void(0)">LinkedIn</a>
+          <a href="javascript:void(0)">X</a>
+        </div>
+      </div>
+
+      <div class="middle-line"></div>
+
+      <div class="right-col">
+        <ul class="footer-nav">
+          <li><a href="index.html">Home</a></li>
+          <li><a href="javascript:void(0)">Expertise</a></li>
+          <li><a href="javascript:void(0)">People</a></li>
+          <li><a href="javascript:void(0)">Offices</a></li>
+          <li><a href="javascript:void(0)">Insights</a></li>
+          <li><a href="javascript:void(0)">Innovation</a></li>
+          <li><a href="javascript:void(0)">About us</a></li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="bottom-bar">
+      <div class="bottom-left-group">
+        <div class="a11y-icon">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="white" aria-hidden="true">
+            <path d="M12 2c1.1 0 2 .9 2 2s-.9 2-2 2-2-.9-2-2 .9-2 2-2zm9 7h-6v13h-2v-6h-2v6H9V9H3V7h18v2z"/>
+          </svg>
+        </div>
+        <div>© CMS LEGAL 2026</div>
+      </div>
+
+      <div class="legal-links">
+        <a href="javascript:void(0)">Legal Information</a>
+        <a href="javascript:void(0)">Privacy Notice</a>
+        <a href="javascript:void(0)">Cookie Notice</a>
+        <a href="javascript:void(0)">Terms of Use</a>
+        <a href="javascript:void(0)">Accessibility</a>
+        <a href="javascript:void(0)">Contact</a>
+        <a href="javascript:void(0)">Sitemap</a>
+      </div>
+
+      <button class="scroll-up" type="button" aria-label="Scroll to top">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3" aria-hidden="true">
+          <path d="M18 15l-6-6-6 6"/>
+        </svg>
+      </button>
+    </div>
+  </div>
+</footer>
+
+<a class="back-top" id="backTop" href="javascript:void(0)" aria-label="Back to top">
+  <svg viewBox="0 0 24 24" aria-hidden="true">
+    <path d="M18 15l-6-6-6 6"></path>
+  </svg>
+</a>
+
+<script>
+(function(){
+  const sticky = document.getElementById('sticky');
+  const hero = document.getElementById('hero');
+  const backTop = document.getElementById('backTop');
+
+  function updateUI(){
+    const heroBottom = hero.getBoundingClientRect().bottom;
+    const afterHero = heroBottom <= 0;
+    sticky.classList.toggle('is-on', afterHero);
+    backTop.classList.toggle('is-on', afterHero);
+  }
+  window.addEventListener('scroll', updateUI, {passive:true});
+  updateUI();
+
+  backTop.addEventListener('click', (e)=>{
+    e.preventDefault();
+    window.scrollTo({top:0, behavior:'smooth'});
+  });
+
+  const btn = document.querySelector('.scroll-up');
+  if(btn){
+    btn.addEventListener('click', ()=> window.scrollTo({top:0, behavior:'smooth'}));
+  }
+
+  // --- LOGIKA UŻYTKOWNIKA ---
+  const PROFILE_KEY = "cms_user_profile_v1";
+  
+  function loadUserData() {
+      const stored = localStorage.getItem(PROFILE_KEY);
+      if(stored) {
+          try {
+              const data = JSON.parse(stored);
+              const firstName = data.firstName || "U";
+              const lastName = data.lastName || "";
+              
+              const initials = (firstName[0] || "") + (lastName[0] || "");
+              const displayName = firstName;
+
+              // Aktualizuj Hero Header
+              const avHero = document.getElementById('avatarHero');
+              const nmHero = document.getElementById('nameHero');
+              if(avHero) avHero.textContent = initials;
+              if(nmHero) nmHero.textContent = displayName;
+              
+              // Aktualizuj Sticky Header
+              const avSticky = document.getElementById('avatarSticky');
+              const nmSticky = document.getElementById('nameSticky');
+              if(avSticky) avSticky.textContent = initials;
+              if(nmSticky) nmSticky.textContent = displayName;
+
+          } catch(e) {
+              console.log("Błąd odczytu danych");
+          }
+      }
+  }
+  
+  loadUserData();
+
+})();
+</script>
+
+</body>
+</html>
